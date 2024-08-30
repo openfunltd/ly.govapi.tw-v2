@@ -21,8 +21,12 @@ class MiniEngine
         $file = $trace[0]['file'];
         $line = $trace[0]['line'];
         $trace = array_map(function($idx) use ($trace){
-            return "#{$idx} {$trace[$idx]['file']}:{$trace[$idx]['line']}";
+            $level = $idx + 1;
+            return "#{$level} {$trace[$idx]['file']}:{$trace[$idx]['line']}";
         }, array_keys($trace));
+        $trace = array_merge([
+            "#0 $file:$line"
+        ], $trace);
 
         error_log("Error: $message in $file:$line\nStack trace:\n" . implode("\n", $trace));
         if (getenv('ENV') == 'production') {
@@ -31,6 +35,7 @@ class MiniEngine
         }
         echo "<p>Error: " . $error->getMessage() . "</p>";
         echo "<ul>";
+        echo "<li>" . $error->getFile() . ":" . $error->getLine() . "</li>";
         foreach ($error->getTrace() as $trace) {
             echo "<li>" . $trace['file'] . ":" . $trace['line'] . "</li>";
         }
