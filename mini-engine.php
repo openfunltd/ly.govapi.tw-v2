@@ -193,8 +193,15 @@ class MiniEngine_Controller
     public function json($data)
     {
         header('Content-Type: application/json');
-        echo json_encode($data);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         return $this->noview();
+    }
+
+    public function cors_json($data)
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET');
+        return $this->json($data);
     }
 
     public function noview()
