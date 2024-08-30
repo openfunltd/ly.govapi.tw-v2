@@ -74,7 +74,7 @@ class LYAPI_SearchAction
         $return_key = LYAPI_Type::run($type, 'getReturnKey');
         $records->{$return_key} = [];
         foreach ($obj->hits->hits as $hit) {
-            $records->{$return_key}[] = $hit->_source;
+            $records->{$return_key}[] = LYAPI_Type::run($type, 'buildData', [$hit->_source]);
         }
         $records->supported_filter_fields = array_keys($filter_fields);
         return $records;
@@ -86,7 +86,7 @@ class LYAPI_SearchAction
         $records = new StdClass;
         $records->error = false;
         $records->id = $ids;
-        $records->data = $obj->_source;
+        $records->data = LYAPI_Type::run($tpe, 'buildData', $obj->_source);
         return $records;
     }
 }
