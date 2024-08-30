@@ -10,4 +10,4 @@ set_include_path(
     __DIR__ . '/libraries'
     . PATH_SEPARATOR . __DIR__ . '/models'
 );
-MiniEngine::registerAutoLoad();
+MiniEngine::initEnv();

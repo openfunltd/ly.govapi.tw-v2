@@ -8,6 +8,37 @@ define('MINI_ENGINE_VERSION', '0.1.0');
 
 class MiniEngine
 {
+    public static function initEnv()
+    {
+        self::registerAutoLoad();
+        error_reporting(E_ALL ^ E_STRICT ^ E_NOTICE);
+    }
+
+    public static function defaultErrorHandler($error)
+    {
+        $message = $error->getMessage();
+        $trace = $error->getTrace();
+        $file = $trace[0]['file'];
+        $line = $trace[0]['line'];
+        $trace = array_map(function($idx) use ($trace){
+            return "#{$idx} {$trace[$idx]['file']}:{$trace[$idx]['line']}";
+        }, array_keys($trace));
+
+        error_log("Error: $message in $file:$line\nStack trace:\n" . implode("\n", $trace));
+        if (getenv('ENV') == 'production') {
+            header('HTTP/1.1 500 Internal Server Error');
+            exit;
+        }
+        echo "<p>Error: " . $error->getMessage() . "</p>";
+        echo "<ul>";
+        foreach ($error->getTrace() as $trace) {
+            echo "<li>" . $trace['file'] . ":" . $trace['line'] . "</li>";
+        }
+        echo "</ul>";
+
+        throw new MiniEngine_Controller_NoView();
+    }
+
     public static function registerAutoLoad()
     {
         spl_autoload_register(array('MiniEngine', 'autoload'));
@@ -58,6 +89,10 @@ class MiniEngine
             $params = $controller_action_params[2] ?? [];
         } catch (Exception $e) {
             self::runControllerAction('error', 'error', [$e]);
+            return;
+        } catch (Error $e) {
+            self::runControllerAction('error', 'error', [$e]);
+            return;
         }
 
         self::runControllerAction($controller, $action, $params);
@@ -291,7 +326,7 @@ set_include_path(
     __DIR__ . '/libraries'
     . PATH_SEPARATOR . __DIR__ . '/models'
 );
-MiniEngine::registerAutoLoad();
+MiniEngine::initEnv();
 
 EOF
         );
@@ -364,8 +399,7 @@ class ErrorController extends MiniEngine_Controller
 {
     public function errorAction(\$error)
     {
-        echo "Error: " . \$error->getMessage();
-        return \$this->noview();
+        MiniEngine::defaultErrorHandler(\$error);
     }
 }
 
