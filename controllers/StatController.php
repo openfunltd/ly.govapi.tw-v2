@@ -4,7 +4,7 @@ class StatController extends MiniEngine_Controller
 {
     public function indexAction()
     {
-        return $this->json(LYAPI_StatAction::getStat());
+        return $this->cors_json(LYAPI_StatAction::getStat());
     }
 }
 
