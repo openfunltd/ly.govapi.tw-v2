@@ -41,6 +41,14 @@ class LYAPI_Type_Legislator extends LYAPI_Type
         ];
     }
 
+    public static function filterFields()
+    {
+        return [
+            '屆期' => '',
+        ];
+    }
+
+
     public static function getFieldMap()
     {
         // from https://data.ly.gov.tw/getds.action?id=16
