@@ -75,7 +75,7 @@ class LYAPI_Type
         return $data;
     }
 
-    protected static $_reverse_field_map = null;
+    protected static $_reverse_field_map = [];
 
     public static function reverseField($field)
     {
@@ -85,8 +85,9 @@ class LYAPI_Type
 
     public static function getReverseFieldMap()
     {
-        if (self::$_reverse_field_map === null) {
-            self::$_reverse_field_map = [];
+        $class = get_called_class();
+        if (!array_key_exists($class, self::$_reverse_field_map)) {
+            self::$_reverse_field_map[$class] = [];
             $prefix = [];
 
             $field_map = static::getFieldMap();
@@ -98,9 +99,9 @@ class LYAPI_Type
 
                     $v = $prefix[$p] . '.' . $v;
                 }
-                self::$_reverse_field_map[$v] = $k;
+                self::$_reverse_field_map[$class][$v] = $k;
             }
         }
-        return self::$_reverse_field_map;
+        return self::$_reverse_field_map[$class];
     }
 }
