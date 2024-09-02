@@ -52,10 +52,22 @@ class LYAPI_SearchAction
         $cmd->size = $records->limit;
         $cmd->from = ($records->page - 1) * $records->limit;
 
+        $default_output_fields = LYAPI_Type::run($type, 'outputFields');
+        if (self::getParams('output_fields')) {
+            $output_fields = self::getParams('output_fields');
+        } elseif (count($default_output_fields)) {
+            $output_fields = $default_output_fields;
+        } else {
+            $output_fields = null;
+        }
+
         $filter_fields = LYAPI_Type::run($type, 'filterFields');
 
         foreach ($filter_fields as $field_name => $v) {
             if (self::getParams($field_name)) {
+                if (!is_null($output_fields)) {
+                    $output_fields[] = $field_name;
+                }
                 if ($v === '') {
                     $v = LYAPI_Type::run($type, 'reverseField', [$field_name]);
                 }
@@ -92,6 +104,14 @@ class LYAPI_SearchAction
                     'fields' => $query_fields,
                 ],
             ];
+        }
+
+        if (!is_null($output_fields)) {
+            $output_fields = array_unique($output_fields);
+            $records->output_fields = $output_fields;
+            $cmd->_source = array_map(function($k) use ($type) {
+                return LYAPI_Type::run($type, 'reverseField', [$k]);
+            }, $output_fields);
         }
 
         $obj = Elastic::dbQuery("/{prefix}{$type}/_search", 'GET', json_encode($cmd));

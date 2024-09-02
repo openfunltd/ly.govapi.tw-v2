@@ -26,6 +26,21 @@ class LYAPI_Type
         return new StdClass;
     }
 
+    public static function filterFields()
+    {
+        return [];
+    }
+
+    public static function queryFields()
+    {
+        return [];
+    }
+
+    public static function outputFields()
+    {
+        return [];
+    }
+
     public static function filterData($data, $field_map, $prefix)
     {
         if (is_array($data)) {
