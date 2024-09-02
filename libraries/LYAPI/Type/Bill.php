@@ -19,6 +19,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
             '屆期' => '',
             '議案流程.狀態' => '議案流程.狀態.keyword',
             '提案人' => '提案人.keyword',
+            '連署人' => '連署人.keyword',
         ];
     }
 
