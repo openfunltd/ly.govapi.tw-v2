@@ -48,19 +48,22 @@ class LYAPI_SearchAction
         $records->total_page = 0;
         $records->page = intval(self::getParam('page', 1));
         $records->limit = intval(self::getParam('limit', 100));
+        $records->filter = new StdClass;
         $cmd->size = $records->limit;
         $cmd->from = ($records->page - 1) * $records->limit;
 
-        $filter_fields = [
-            'term' => 'term',
-        ];
+        $filter_fields = LYAPI_Type::run($type, 'filterFields');
+        $reverse_field_map = LYAPI_Type::run($type, 'getReverseFieldMap');
 
-        foreach ($filter_fields as $k => $v) {
-            if (self::getParams($k)) {
-                $records->{$k} = self::getParams($k, ['array' => true]);
+        foreach ($filter_fields as $field_name => $v) {
+            if (self::getParams($field_name)) {
+                if ($v === '') {
+                    $v = $reverse_field_map[$field_name];
+                }
+                $records->filter->{$field_name} = self::getParams($field_name, ['array' => true]);
                 $cmd->query->bool->must[] = (object)[
                     'terms' => (object)[
-                        $v => $records->{$k},
+                        $v => $records->filter->{$field_name},
                     ],
                 ];
             }
