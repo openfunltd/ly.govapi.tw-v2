@@ -4,7 +4,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
 {
     public static function getFieldMap()
     {
-        return (object)[
+        return [
             'term' => '屆期',
             'meet_id' => '會議代碼',
             'meet_type' => '會議種類',
