@@ -13,6 +13,15 @@ class LYAPI_Type_Bill extends LYAPI_Type
         ];
     }
 
+    public static function filterFields()
+    {
+        return [
+            '屆期' => '',
+            '議案流程.狀態' => '議案流程.狀態.keyword',
+            '提案人' => '提案人.keyword',
+        ];
+    }
+
     public static function outputFields()
     {
         return [

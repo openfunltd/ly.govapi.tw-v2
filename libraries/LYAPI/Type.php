@@ -41,6 +41,11 @@ class LYAPI_Type
         return [];
     }
 
+    public static function getRelations()
+    {
+        return [];
+    }
+
     public static function filterData($data, $field_map, $prefix)
     {
         if (is_array($data)) {

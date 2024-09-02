@@ -132,6 +132,30 @@ class LYAPI_SearchAction
     {
         $id = implode('-', $ids);
         $obj = Elastic::dbQuery("/{prefix}{$type}/_doc/{$id}", 'GET');
+        if ($obj->found === false) {
+            $records = new StdClass;
+            $records->error = true;
+            $records->message = '找不到資料';
+            return $records;
+        }
+        $relations = LYAPI_Type::run($type, 'getRelations');
+        if ($sub[0]) {
+            if (!array_key_exists($sub[0], $relations)) {
+                $records = new StdClass;
+                $records->error = true;
+                $records->message = '找不到子資料';
+                return $records;
+            }
+            $rel = $relations[$sub[0]];
+            $query_string = [];
+            foreach ($rel['map'] as $source_key => $target_key) {
+                $source_key = LYAPI_Type::run($type, 'reverseField', [$source_key]);
+                $target_key = urlencode($target_key);
+                $query_string[] = "{$target_key}=" . urlencode($obj->_source->{$source_key});
+            }
+            $query_string = implode('&', $query_string);
+            return self::getCollections($rel['type'], $query_string);
+        }
         $records = new StdClass;
         $records->error = false;
         $records->id = $ids;

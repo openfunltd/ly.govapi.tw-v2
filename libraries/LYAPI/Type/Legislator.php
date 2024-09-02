@@ -7,6 +7,19 @@ class LYAPI_Type_Legislator extends LYAPI_Type
         return 2;
     }
 
+    public static function getRelations()
+    {
+        return [
+            'propose_bill' => [
+                'type' => 'bill',
+                'map' => [
+                    '屆期' => '屆期',
+                    '委員姓名' => '提案人',
+                ],
+            ],
+        ];
+    }
+
     public static function getFieldMap()
     {
         // from https://data.ly.gov.tw/getds.action?id=16
