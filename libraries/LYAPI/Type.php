@@ -59,4 +59,27 @@ class LYAPI_Type
         $data = self::filterData($data, $field_map, '');
         return $data;
     }
+
+    protected static $_reverse_field_map = null;
+
+    public static function getReverseFieldMap()
+    {
+        if (self::$_reverse_field_map === null) {
+            self::$_reverse_field_map = [];
+            $prefix = [];
+
+            $field_map = static::getFieldMap();
+            foreach ($field_map as $k => $v) {
+                $prefix[$k] = $v;
+                if (strpos($k, '.') !== false) {
+                    $terms = explode('.', $k);
+                    $p = implode('.', array_slice($terms, 0, -1));
+
+                    $v = $prefix[$p] . '.' . $v;
+                }
+                self::$_reverse_field_map[$v] = $k;
+            }
+        }
+        return self::$_reverse_field_map;
+    }
 }
