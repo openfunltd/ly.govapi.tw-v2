@@ -44,4 +44,13 @@ class LYAPI_Type_Meet extends LYAPI_Type
         ];
     }
 
+    public static function queryFields()
+    {
+        return [
+            '會議標題',
+            '會議資料.會議名稱',
+            '會議資料.會議事由',
+        ];
+    }
+
 }
