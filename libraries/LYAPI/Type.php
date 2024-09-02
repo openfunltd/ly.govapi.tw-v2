@@ -62,6 +62,12 @@ class LYAPI_Type
 
     protected static $_reverse_field_map = null;
 
+    public static function reverseField($field)
+    {
+        $reverse_field_map = static::getReverseFieldMap();
+        return $reverse_field_map[$field] ?? $field;
+    }
+
     public static function getReverseFieldMap()
     {
         if (self::$_reverse_field_map === null) {
