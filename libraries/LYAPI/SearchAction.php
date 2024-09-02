@@ -107,7 +107,7 @@ class LYAPI_SearchAction
         }
 
         if (!is_null($output_fields)) {
-            $output_fields = array_unique($output_fields);
+            $output_fields = array_values(array_unique($output_fields));
             $records->output_fields = $output_fields;
             $cmd->_source = array_map(function($k) use ($type) {
                 return LYAPI_Type::run($type, 'reverseField', [$k]);
