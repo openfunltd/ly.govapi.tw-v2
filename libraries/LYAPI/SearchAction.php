@@ -130,11 +130,12 @@ class LYAPI_SearchAction
 
     public static function getItem($type, $ids, $sub, $query_string)
     {
-        $obj = Elastic::dbQuery("/{prefix}{$type}/_doc/{$ids[0]}", 'GET');
+        $id = implode('-', $ids);
+        $obj = Elastic::dbQuery("/{prefix}{$type}/_doc/{$id}", 'GET');
         $records = new StdClass;
         $records->error = false;
         $records->id = $ids;
-        $records->data = LYAPI_Type::run($tpe, 'buildData', $obj->_source);
+        $records->data = LYAPI_Type::run($type, 'buildData', [$obj->_source]);
         return $records;
     }
 }
