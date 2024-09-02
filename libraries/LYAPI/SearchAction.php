@@ -53,12 +53,11 @@ class LYAPI_SearchAction
         $cmd->from = ($records->page - 1) * $records->limit;
 
         $filter_fields = LYAPI_Type::run($type, 'filterFields');
-        $reverse_field_map = LYAPI_Type::run($type, 'getReverseFieldMap');
 
         foreach ($filter_fields as $field_name => $v) {
             if (self::getParams($field_name)) {
                 if ($v === '') {
-                    $v = $reverse_field_map[$field_name];
+                    $v = LYAPI_Type::run($type, 'reverseField', [$field_name]);
                 }
                 $records->filter->{$field_name} = self::getParams($field_name, ['array' => true]);
                 $cmd->query->bool->must[] = (object)[
@@ -67,6 +66,32 @@ class LYAPI_SearchAction
                     ],
                 ];
             }
+        }
+
+        if (self::getParams('q')) {
+            $records->query = new StdClass;
+            $records->query->q = self::getParam('q');
+            $default_query_fields = LYAPI_Type::run($type, 'queryFields');
+            if (self::getParams('query_fields')) {
+                $query_fields = self::getParams('query_fields');
+                foreach ($query_fields as $f) {
+                    if (!in_array($f, $default_query_fields)) {
+                        throw new Exception(sprintf("query_fields 不支援 %s（支援：%s）", $f, implode(',', $default_query_fields)));
+                    }
+                }
+            } else {
+                $query_fields = $default_query_fields;
+            }
+            $records->query->fields = $query_fields;
+            $query_fields = array_map(function ($v) use ($type) {
+                return LYAPI_Type::run($type, 'reverseField', [$v]);
+            }, $query_fields);
+            $cmd->query->bool->must[] = (object)[
+                'query_string' => (object)[
+                    'query' => self::getParam('q'),
+                    'fields' => $query_fields,
+                ],
+            ];
         }
 
         $obj = Elastic::dbQuery("/{prefix}{$type}/_search", 'GET', json_encode($cmd));
