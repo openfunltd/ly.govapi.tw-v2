@@ -68,12 +68,24 @@ class LYAPI_Type_Meet extends LYAPI_Type
     public static function getRelations()
     {
         return [
-            'ivod' => [
+            'ivods' => [
                 'type' => 'ivod',
                 'map' => [
                     '會議代碼' => '會議.會議代碼',
                 ],
-            ]
+            ],
+            'bills' => [
+                'type' => 'bill',
+                'map' => [
+                    '會議代碼' => '會議代碼',
+                ],
+            ],
+            'interpellations' => [
+                'type' => 'interpellation',
+                'map' => [
+                    '會議代碼' => '會議代碼',
+                ],
+            ],
         ];
     }
 }
