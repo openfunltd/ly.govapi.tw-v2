@@ -24,7 +24,7 @@ class LYAPI_Type_Committee extends LYAPI_Type
     public static function getRelations()
     {
         return [
-            'meet' => [
+            'meets' => [
                 'type' => 'meet',
                 'map' => [
                     '委員會代號' => '委員會代號',

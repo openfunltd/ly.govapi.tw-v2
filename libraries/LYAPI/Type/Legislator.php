@@ -16,28 +16,28 @@ class LYAPI_Type_Legislator extends LYAPI_Type
     public static function getRelations()
     {
         return [
-            'propose_bill' => [
+            'propose_bills' => [
                 'type' => 'bill',
                 'map' => [
                     '屆期' => '屆期',
                     '委員姓名' => '提案人',
                 ],
             ],
-            'cosign_bill' => [
+            'cosign_bills' => [
                 'type' => 'bill',
                 'map' => [
                     '屆期' => '屆期',
                     '委員姓名' => '連署人',
                 ],
             ],
-            'meet' => [
+            'meets' => [
                 'type' => 'meet',
                 'map' => [
                     '屆期' => '屆期',
                     '委員姓名' => '會議資料.出席立委',
                 ],
             ],
-            'interpellation' => [
+            'interpellations' => [
                 'type' => 'interpellation',
                 'map' => [
                     '屆期' => '屆期',
