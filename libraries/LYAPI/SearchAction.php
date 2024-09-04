@@ -31,7 +31,14 @@ class LYAPI_SearchAction
             self::$_params = [];
         }
         self::$_params = array_map(function($t) {
-            return array_map('urldecode', explode('=', $t, 2));
+            if (strpos($t, '=') !== false) {
+                return array_map('urldecode', explode('=', $t, 2));
+            }
+            if (strpos($t, ':') !== false) {
+                list($k, $range) = explode(':', $t, 2);
+                $range = explode(',', $range);
+                return [urldecode($k), $range];
+            }
         }, explode('&', $query_string));
     }
 
@@ -82,20 +89,36 @@ class LYAPI_SearchAction
 
         $filter_fields = LYAPI_Type::run($type, 'filterFields');
 
-        foreach ($filter_fields as $field_name => $v) {
+        foreach ($filter_fields as $field_name => $es_field_name) {
             if (self::getParams($field_name)) {
                 if (!is_null($output_fields)) {
                     $output_fields[] = $field_name;
                 }
-                if ($v === '') {
-                    $v = LYAPI_Type::run($type, 'reverseField', [$field_name]);
+                if ($es_field_name === '') {
+                    $es_field_name = LYAPI_Type::run($type, 'reverseField', [$field_name]);
                 }
-                $records->filter->{$field_name} = self::getParams($field_name);
-                $cmd->query->bool->must[] = (object)[
-                    'terms' => (object)[
-                        $v => $records->filter->{$field_name},
-                    ],
-                ];
+                $v = self::getParams($field_name);
+                if (is_array($v)) {
+                    $v = $v[0];
+                    $records->range = $records->range ?? new StdClass;
+                    $records->range->{$field_name} = $v;
+
+                    $cmd->query->bool->must[] = (object)[
+                        'range' => (object)[
+                            $es_field_name  => (object)[
+                                'gte' => date('c', strtotime($v[0])),
+                                'lte' => date('c', strtotime($v[1])),
+                            ],
+                        ],
+                    ];
+                } else {
+                    $records->filter->{$field_name} = self::getParams($field_name);
+                    $cmd->query->bool->must[] = (object)[
+                        'terms' => (object)[
+                            $v => $records->filter->{$field_name},
+                        ],
+                    ];
+                }
             }
         }
 
