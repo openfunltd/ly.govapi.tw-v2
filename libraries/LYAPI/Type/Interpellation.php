@@ -5,7 +5,7 @@ class LYAPI_Type_Interpellation extends LYAPI_Type
     public static function getFieldMap()
     {
         return [
-            'term' => '屆期',
+            'term' => '屆',
             'legislators' => '質詢委員',
             'meet_id' => '會議代碼',
             'id' => '質詢編號',
@@ -25,8 +25,17 @@ class LYAPI_Type_Interpellation extends LYAPI_Type
     {
         return [
             '質詢委員' => 'legislators.keyword',
-            '屆期' => '',
+            '屆' => '',
+            '會期' => 'sessionPeriod',
             '會議代碼' => 'meet_id.keyword',
+        ];
+    }
+
+    public static function searchFields()
+    {
+        return [
+            '事由',
+            '說明',
         ];
     }
 }
