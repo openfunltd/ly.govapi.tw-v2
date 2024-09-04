@@ -166,7 +166,7 @@ class LYAPI_SearchAction
                 return $records;
             }
             $rel = $relations[$sub[0]];
-            $query_string = [];
+            $query_string = explode('&', $query_string);
             foreach ($rel['map'] as $source_key => $target_key) {
                 $source_key = LYAPI_Type::run($type, 'reverseField', [$source_key]);
                 $target_key = urlencode($target_key);
