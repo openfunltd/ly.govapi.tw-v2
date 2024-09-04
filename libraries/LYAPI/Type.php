@@ -73,9 +73,12 @@ class LYAPI_Type
         return $data;
     }
 
-    public static function buildData($data)
+    public static function buildData($data, $id)
     {
         $field_map = static::getFieldMap();
+        if (array_key_exists('_id', $field_map)) {
+            $data->{$field_map['_id']} = $id;
+        }
         $data = self::filterData($data, $field_map, '');
         return $data;
     }
