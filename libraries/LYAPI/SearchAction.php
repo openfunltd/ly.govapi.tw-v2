@@ -90,7 +90,7 @@ class LYAPI_SearchAction
                 if ($v === '') {
                     $v = LYAPI_Type::run($type, 'reverseField', [$field_name]);
                 }
-                $records->filter->{$field_name} = self::getParams($field_name, ['array' => true]);
+                $records->filter->{$field_name} = self::getParams($field_name);
                 $cmd->query->bool->must[] = (object)[
                     'terms' => (object)[
                         $v => $records->filter->{$field_name},
