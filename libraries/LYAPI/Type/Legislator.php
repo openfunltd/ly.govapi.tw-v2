@@ -45,6 +45,9 @@ class LYAPI_Type_Legislator extends LYAPI_Type
     {
         return [
             '屆期' => '',
+            '黨籍' => 'party.keyword',
+            '選區名稱' => 'areaName.keyword',
+            '歷屆立法委員編號' => '',
         ];
     }
 
