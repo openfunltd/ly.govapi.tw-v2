@@ -8,7 +8,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
             'term' => '屆期',
             'meet_id' => '會議代碼',
             'meet_type' => '會議種類',
-            'committees' => '委員會代碼',
+            'committees' => '委員會代號',
             'sessionPeriod' => '會期',
             'sessionTimes' => '會次',
             'dates' => '日期',
@@ -39,7 +39,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
             '會議種類' => 'meet_type.keyword',
             '會議資料.出席立委' => 'meet_data.attendLegislator.keyword',
             '日期' => '',
-            '委員會代碼' => '',
+            '委員會代號' => '',
             '會議編號' => 'meet_data.meetingNo.keyword',
         ];
     }
