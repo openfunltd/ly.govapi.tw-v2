@@ -7,6 +7,12 @@ class LYAPI_Type_Legislator extends LYAPI_Type
         return 2;
     }
 
+    public static function defaultLimit()
+    {
+        return 200;
+    }
+
+
     public static function getRelations()
     {
         return [

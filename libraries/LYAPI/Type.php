@@ -46,6 +46,11 @@ class LYAPI_Type
         return [];
     }
 
+    public static function defaultLimit()
+    {
+        return 100;
+    }
+
     public static function getRelations()
     {
         return [];
