@@ -90,6 +90,12 @@ class LYAPI_Type
             $data->{$field_map['_id']} = $id;
         }
         $data = self::filterData($data, $field_map, '');
+        $data = static::customData($data, $id);
+        return $data;
+    }
+
+    public static function customData($data, $id)
+    {
         return $data;
     }
 

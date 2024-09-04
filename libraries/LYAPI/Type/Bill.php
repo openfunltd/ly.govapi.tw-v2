@@ -70,4 +70,10 @@ class LYAPI_Type_Bill extends LYAPI_Type
             '資料抓取時間',
         ];
     }
+
+    public static function customData($data, $id)
+    {
+        $data->url = sprintf("https://ppg.ly.gov.tw/ppg/bills/%s/details", urlencode($data->議案編號));
+        return $data;
+    }
 }
