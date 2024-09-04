@@ -4,7 +4,7 @@ class LYAPI_Type
 {
     public static function run($type, $method, $args = [])
     {
-        $class = 'LYAPI_Type_' . ucfirst($type);
+        $class = 'LYAPI_Type_' . LYAPI_Helper::ucfirst($type);
         if (!class_exists($class)) {
             throw new Exception('Type not found: ' . $type);
         }
