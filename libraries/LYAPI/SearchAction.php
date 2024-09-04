@@ -174,9 +174,9 @@ class LYAPI_SearchAction
         }
 
         $obj = Elastic::dbQuery("/{prefix}{$type}/_search", 'GET', json_encode($cmd));
-        $records->total = $obj->hits->total;
+        $records->total = $obj->hits->total->value;
         if ($records->limit) {
-            $records->total_page = ceil($records->total->value / $records->limit);
+            $records->total_page = ceil($records->total / $records->limit);
         }
         $return_key = LYAPI_Type::run($type, 'getReturnKey');
         $records->{$return_key} = [];
