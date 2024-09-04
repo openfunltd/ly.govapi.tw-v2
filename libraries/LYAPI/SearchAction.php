@@ -125,6 +125,27 @@ class LYAPI_SearchAction
             ];
         }
 
+        if (self::getParams('agg')) {
+            $cmd->aggs = new StdClass;
+            foreach (self::getParams('agg') as $agg) {
+                $agg_name = strval($agg);
+                $agg_field = $agg;
+                if (!array_key_exists($agg_field, $filter_fields)) {
+                    throw new Exception(sprintf("agg 不支援 %s（支援：%s）", $agg_field, implode(',', array_keys($filter_fields))));
+                }
+                if ($filter_fields[$agg_field] === '') {
+                    $agg_field = LYAPI_Type::run($type, 'reverseField', [$agg_field]);
+                } else {
+                    $agg_field = $filter_fields[$agg_field];
+                }
+                $cmd->aggs->{$agg_name} = (object)[
+                    'terms' => (object)[
+                        'field' => $agg_field,
+                    ],
+                ];
+            }
+        }
+
         if (!is_null($output_fields)) {
             $output_fields = array_values(array_unique($output_fields));
             $records->output_fields = $output_fields;
@@ -143,6 +164,26 @@ class LYAPI_SearchAction
         foreach ($obj->hits->hits as $hit) {
             $records->{$return_key}[] = LYAPI_Type::run($type, 'buildData', [$hit->_source, $hit->_id]);
         }
+        if (self::getParams('agg')) {
+            $records->aggs = new StdClass;
+            foreach (self::getParams('agg') as $agg) {
+                $agg_name = strval($agg);
+                $agg_field = $agg;
+                if ($filter_fields[$agg_field] === '') {
+                    $agg_field = LYAPI_Type::run($type, 'reverseField', [$agg_field]);
+                } else {
+                    $agg_field = $filter_fields[$agg_field];
+                }
+                $records->aggs->{$agg_name} = [];
+                foreach ($obj->aggregations->{$agg_name}->buckets as $bucket) {
+                    $records->aggs->{$agg_name}[] = (object)[
+                        'key' => $bucket->key,
+                        'doc_count' => $bucket->doc_count,
+                    ];
+                }
+            }
+        }
+
         $records->supported_filter_fields = array_keys($filter_fields);
         return $records;
     }
