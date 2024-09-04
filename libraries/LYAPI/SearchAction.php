@@ -250,6 +250,9 @@ class LYAPI_SearchAction
         $agg_field = array_shift($agg_fields);
         foreach ($es_buckets as $es_bucket) {
             $values[$agg_field] = $es_bucket->key;
+            if ($es_bucket->key_as_string ?? false) {
+                $values[$agg_field] = $es_bucket->key_as_string;
+            }
             if ($level) {
                 $buckets = array_merge($buckets,
                     self::mergeBucketByLevel(
