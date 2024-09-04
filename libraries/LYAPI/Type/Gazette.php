@@ -22,4 +22,13 @@ class LYAPI_Type_Gazette extends LYAPI_Type
             '卷' => '',
         ];
     }
+
+    public static function sortFields()
+    {
+        return [
+            '卷',
+            '期',
+            '冊別',
+        ];
+    }
 }

@@ -41,6 +41,11 @@ class LYAPI_Type
         return [];
     }
 
+    public static function sortFields()
+    {
+        return [];
+    }
+
     public static function getRelations()
     {
         return [];

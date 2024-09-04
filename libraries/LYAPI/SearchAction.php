@@ -61,6 +61,24 @@ class LYAPI_SearchAction
             $output_fields = null;
         }
 
+        $default_sort_fields = LYAPI_Type::run($type, 'sortFields');
+        $sort_fields = $default_sort_fields;
+        if ($sort_fields) {
+            $cmd->sort = new StdClass;
+            foreach ($sort_fields as $field_name) {
+                $way = 'desc';
+                if (preg_match('#>$#', $field_name)) {
+                    $way = 'desc';
+                    $field_name = substr($field_name, 0, -1);
+                } elseif (preg_match('#<$#', $field_name)) {
+                    $way = 'asc';
+                    $field_name = substr($field_name, 0, -1);
+                }
+                $cmd->sort->{LYAPI_Type::run($type, 'reverseField', [$field_name])} = $way;
+            }
+            $records->sort = $sort_fields;
+        }
+
         $filter_fields = LYAPI_Type::run($type, 'filterFields');
 
         foreach ($filter_fields as $field_name => $v) {
