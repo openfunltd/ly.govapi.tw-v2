@@ -28,7 +28,7 @@ class LYAPI_SearchAction
     protected static function setQueryString($query_string)
     {
         if (trim($query_string) == '') {
-            return;
+            self::$_params = [];
         }
         self::$_params = array_map(function($t) {
             return array_map('urldecode', explode('=', $t, 2));
