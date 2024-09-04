@@ -129,20 +129,39 @@ class LYAPI_SearchAction
             $cmd->aggs = new StdClass;
             foreach (self::getParams('agg') as $agg) {
                 $agg_name = strval($agg);
-                $agg_field = $agg;
-                if (!array_key_exists($agg_field, $filter_fields)) {
-                    throw new Exception(sprintf("agg 不支援 %s（支援：%s）", $agg_field, implode(',', array_keys($filter_fields))));
+                $agg_fields = explode(',', $agg);
+                $agg_term = null;
+                while (count($agg_fields)) {
+                    $agg_field = array_pop($agg_fields);
+                    if (!array_key_exists($agg_field, $filter_fields)) {
+                        throw new Exception(sprintf("agg 不支援 %s（支援：%s）", $agg_field, implode(',', array_keys($filter_fields))));
+                    }
+                    if ($filter_fields[$agg_field] === '') {
+                        $es_field = LYAPI_Type::run($type, 'reverseField', [$agg_field]);
+                    } else {
+                        $es_field = $filter_fields[$agg_field];
+                    }
+                    if (is_null($agg_term)) {
+                        $agg_term = (object)[
+                            'terms' => (object)[
+                                'field' => $es_field,
+                                'size' => 100,
+                            ],
+                        ];
+                    } else {
+                        $agg_term = (object)[
+                            'terms' => (object)[
+                                'field' => $es_field,
+                                'size' => 100,
+                            ],
+                            'aggs' => (object)[
+                                $agg_field => $agg_term,
+                            ],
+                        ];
+
+                    }
                 }
-                if ($filter_fields[$agg_field] === '') {
-                    $agg_field = LYAPI_Type::run($type, 'reverseField', [$agg_field]);
-                } else {
-                    $agg_field = $filter_fields[$agg_field];
-                }
-                $cmd->aggs->{$agg_name} = (object)[
-                    'terms' => (object)[
-                        'field' => $agg_field,
-                    ],
-                ];
+                $cmd->aggs->{$agg_name} = $agg_term;
             }
         }
 
@@ -165,23 +184,25 @@ class LYAPI_SearchAction
             $records->{$return_key}[] = LYAPI_Type::run($type, 'buildData', [$hit->_source, $hit->_id]);
         }
         if (self::getParams('agg')) {
-            $records->aggs = new StdClass;
+            $records->aggs = [];
             foreach (self::getParams('agg') as $agg) {
                 $agg_name = strval($agg);
-                $agg_field = $agg;
-                if ($filter_fields[$agg_field] === '') {
-                    $agg_field = LYAPI_Type::run($type, 'reverseField', [$agg_field]);
-                } else {
-                    $agg_field = $filter_fields[$agg_field];
-                }
-                $records->aggs->{$agg_name} = [];
-                foreach ($obj->aggregations->{$agg_name}->buckets as $bucket) {
-                    $records->aggs->{$agg_name}[] = (object)[
-                        'key' => $bucket->key,
-                        'doc_count' => $bucket->doc_count,
-                    ];
+                $agg_fields = explode(',', $agg);
+                for ($i = 0; $i < count($agg_fields); $i ++) {
+                    $sub_agg_name = implode(',', array_slice($agg_fields, 0, $i + 1));
+
+                    $records->aggs[$sub_agg_name] = new StdClass;
+                    $records->aggs[$sub_agg_name]->agg = $sub_agg_name;
+                    $records->aggs[$sub_agg_name]->agg_fields = array_slice($agg_fields, 0, $i + 1);
+                    $records->aggs[$sub_agg_name]->buckets = self::getBuckets(
+                        $obj->aggregations->{$agg_name}->buckets, $agg_fields, $i);
+                    usort($records->aggs[$sub_agg_name]->buckets, function($a, $b) {
+                        return $b->count - $a->count;
+                    });
+                    $records->aggs[$sub_agg_name]->buckets = array_slice($records->aggs[$sub_agg_name]->buckets, 0, 100);
                 }
             }
+            $records->aggs = array_values($records->aggs);
         }
 
         $records->supported_filter_fields = array_keys($filter_fields);
@@ -221,5 +242,34 @@ class LYAPI_SearchAction
         $records->id = $ids;
         $records->data = LYAPI_Type::run($type, 'buildData', [$obj->_source, $hit->_id]);
         return $records;
+    }
+
+    public static function mergeBucketByLevel($es_buckets, $agg_fields, $level, $values)
+    {
+        $buckets = [];
+        $agg_field = array_shift($agg_fields);
+        foreach ($es_buckets as $es_bucket) {
+            $values[$agg_field] = $es_bucket->key;
+            if ($level) {
+                $buckets = array_merge($buckets,
+                    self::mergeBucketByLevel(
+                        $es_bucket->{$agg_field}->buckets, $agg_fields, $level - 1, $values
+                    )
+                );
+            } else {
+                $bucket = new StdClass;
+                foreach ($values as $k => $v) {
+                    $bucket->{$k} = $v;
+                }
+                $bucket->count = $es_bucket->doc_count;
+                $buckets[] = $bucket;
+            }
+        }
+        return $buckets;
+    }
+
+    public static function getBuckets($es_buckets, $agg_fields, $level)
+    {
+        return self::mergeBucketByLevel($es_buckets, $agg_fields, $level, []);
     }
 }
