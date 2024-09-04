@@ -39,6 +39,7 @@ class LYAPI_SearchAction
     {
         self::setQueryString($query_string);
         $cmd = new StdClass;
+        $cmd->track_total_hits = true;
         $cmd->query = new StdClass;
         $cmd->query->bool = new StdClass;
         $cmd->query->bool->must = [];
