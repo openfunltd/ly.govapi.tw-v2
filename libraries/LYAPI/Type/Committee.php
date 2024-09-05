@@ -17,7 +17,7 @@ class LYAPI_Type_Committee extends LYAPI_Type
     public static function filterFields()
     {
         return [
-            '委員會類別' => '',
+            '委員會類別' => 'comtType.keyword',
         ];
     }
 

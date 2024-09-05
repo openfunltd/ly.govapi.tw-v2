@@ -34,6 +34,7 @@ class LYAPI_Type_Ivod extends LYAPI_Type
             '委員名稱' => '委員名稱.keyword',
             '會議資料.委員會代碼' => '',
             '日期' => '',
+            '影片種類' => 'type.keyword',
         ];
     }
 
