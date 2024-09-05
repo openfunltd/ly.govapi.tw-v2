@@ -52,4 +52,29 @@ class LYAPI_Type_GazetteAgenda extends LYAPI_Type
             '冊別',
         ];
     }
+
+    public static function customData($data, $id)
+    {
+        $data->{'公報網網址'} = sprintf("https://ppg.ly.gov.tw/ppg/publications/official-gazettes/%03d/%02d/%02d/details",
+            $data->{'卷'},
+            $data->{'期'},
+            $data->{'冊別'}
+        );
+        $data->{'公報完整PDF網址'} = sprintf("https://ppg.ly.gov.tw/ppg/PublicationBulletinDetail/download/communique1/final/pdf/%d/%02d/LCIDC01_%03d%02d%02d.pdf",
+            $data->{'卷'},
+            $data->{'期'},
+            $data->{'卷'},
+            $data->{'期'},
+            $data->{'冊別'}
+        );
+        $data->{'公報HTML網址'} = [];
+        foreach ($data->{'doc檔案下載位置'} as $doc_url) {
+            if (!preg_match('#LCIDC01_([0-9_]+)#', $doc_url, $matches)) {
+                continue;
+            }
+            $data->{'公報HTML網址'}[] = sprintf("https://%s/gazette_agenda/%s/html", $_SERVER['HTTP_HOST'], urlencode($matches[1]));
+        }
+
+        return $data;
+    }
 }
