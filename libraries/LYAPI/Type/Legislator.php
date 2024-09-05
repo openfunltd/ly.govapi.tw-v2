@@ -80,4 +80,10 @@ class LYAPI_Type_Legislator extends LYAPI_Type
             'bioId' => '歷屆立法委員編號',
         ];
     }
+
+    public static function customData($data, $id)
+    {
+        $data->照片位址 = str_replace('http://', 'https://', $data->照片位址);
+        return $data;
+    }
 }
