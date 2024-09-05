@@ -27,6 +27,7 @@ class LYAPI_SearchAction
 
     protected static function setQueryString($query_string)
     {
+        $query_string = trim($query_string, '&');
         if (trim($query_string) == '') {
             self::$_params = [];
             return;
