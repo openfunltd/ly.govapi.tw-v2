@@ -264,6 +264,10 @@ class LYAPI_SearchAction
                 $query_string[] = "{$target_key}=" . urlencode($obj->_source->{$source_key});
             }
             $query_string = implode('&', $query_string);
+            if ($rel['type'] == '_function') {
+                $data = LYAPI_Type::run($type, 'buildData', [$obj->_source, $obj->_id]);
+                return LYAPI_Type::run($type, $rel['function'], [$data]);
+            }
             return self::getCollections($rel['type'], $query_string);
         }
         $records = new StdClass;
