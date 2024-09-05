@@ -29,6 +29,7 @@ class LYAPI_SearchAction
     {
         if (trim($query_string) == '') {
             self::$_params = [];
+            return;
         }
         self::$_params = array_map(function($t) {
             if (strpos($t, '=') !== false) {
