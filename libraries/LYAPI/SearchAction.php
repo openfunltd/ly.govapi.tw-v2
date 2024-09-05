@@ -39,6 +39,7 @@ class LYAPI_SearchAction
                 $range = explode(',', $range);
                 return [urldecode($k), $range];
             }
+            throw new Exception("不支援的參數格式：{$t}");
         }, explode('&', $query_string));
     }
 
@@ -98,24 +99,28 @@ class LYAPI_SearchAction
                     $es_field_name = LYAPI_Type::run($type, 'reverseField', [$field_name]);
                 }
                 $v = self::getParams($field_name);
-                if (is_array($v)) {
+                if (is_array($v) and count($v) and is_array($v[0])) {
                     $v = $v[0];
                     $records->range = $records->range ?? new StdClass;
                     $records->range->{$field_name} = $v;
 
+                    $range_obj = [];
+                    if ($v[0]) {
+                        $range_obj['gte'] = date('c', strtotime($v[0]));
+                    }
+                    if ($v[1]) {
+                        $range_obj['lte'] = date('c', strtotime($v[1]));
+                    }
                     $cmd->query->bool->must[] = (object)[
                         'range' => (object)[
-                            $es_field_name  => (object)[
-                                'gte' => date('c', strtotime($v[0])),
-                                'lte' => date('c', strtotime($v[1])),
-                            ],
+                            $es_field_name  => $range_obj,
                         ],
                     ];
                 } else {
                     $records->filter->{$field_name} = self::getParams($field_name);
                     $cmd->query->bool->must[] = (object)[
                         'terms' => (object)[
-                            $v => $records->filter->{$field_name},
+                            $es_field_name => $records->filter->{$field_name},
                         ],
                     ];
                 }
