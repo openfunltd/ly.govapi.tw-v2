@@ -27,7 +27,7 @@ class LYAPI_Helper
 
         if (file_exists(__DIR__ . '/Type/' . self::ucfirst($type) . '.php')) {
             $class = 'LYAPI_Type_' . self::ucfirst($type);
-            $id_term_count = call_user_func([$class, 'get_id_count']);
+            $id_term_count = LYAPI_Type::run($type, 'get_id_count');
             $id = array_map('urldecode', array_slice($url_terms, 0, $id_term_count));
             $url_terms = array_slice($url_terms, $id_term_count);
             return ['api', 'item', [$type, $id, $url_terms]];
