@@ -16,9 +16,9 @@ class LYAPI_Type
         return strtolower(str_replace('LYAPI_Type_', '', get_called_class())) . 's';
     }
 
-    public static function get_id_count()
+    public static function getIdFields()
     {
-        return 1;
+        return ['_id'];
     }
 
     public static function getFieldMap()

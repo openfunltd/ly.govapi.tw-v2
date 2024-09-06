@@ -60,6 +60,7 @@ class LYAPI_SearchAction
         $records->page = intval(self::getParam('page', 1));
         $records->limit = intval(self::getParam('limit', LYAPI_Type::run($type, 'defaultLimit')));
         $records->filter = new StdClass;
+        $records->id_fields = LYAPI_Type::run($type, 'getIdFields');
         $cmd->size = $records->limit;
         $cmd->from = ($records->page - 1) * $records->limit;
 

@@ -25,6 +25,11 @@ class LYAPI_Type_Ivod extends LYAPI_Type
         ];
     }
 
+    public static function getIdFields()
+    {
+        return ['IVOD_ID'];
+    }
+
     public static function filterFields()
     {
         return [

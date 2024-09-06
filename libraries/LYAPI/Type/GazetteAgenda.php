@@ -27,6 +27,11 @@ class LYAPI_Type_GazetteAgenda extends LYAPI_Type
         ];
     }
 
+    public static function getIdFields()
+    {
+        return ['公報議程編號'];
+    }
+
     public static function filterFields()
     {
         return [

@@ -14,6 +14,12 @@ class LYAPI_Type_Committee extends LYAPI_Type
         ];
     }
 
+    public static function getIdFields()
+    {
+        return ['委員會代號'];
+    }
+
+
     public static function filterFields()
     {
         return [

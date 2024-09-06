@@ -15,6 +15,11 @@ class LYAPI_Type_Bill extends LYAPI_Type
         ];
     }
 
+    public static function getIdFields()
+    {
+        return ['議案編號'];
+    }
+
     public static function filterFields()
     {
         return [

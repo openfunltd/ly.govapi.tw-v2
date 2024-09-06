@@ -34,6 +34,11 @@ class LYAPI_Type_Meet extends LYAPI_Type
         ];
     }
 
+    public static function getIdFields()
+    {
+        return ['會議代碼'];
+    }
+
     public static function filterFields()
     {
         return [

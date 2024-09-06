@@ -15,6 +15,11 @@ class LYAPI_Type_Gazette extends LYAPI_Type
         ];
     }
 
+    public static function getIdFields()
+    {
+        return ['公報編號'];
+    }
+
     public static function filterFields()
     {
         return [

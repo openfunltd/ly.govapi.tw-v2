@@ -15,6 +15,11 @@ class LYAPI_Type_Law extends LYAPI_Type
         ];
     }
 
+    public static function getIdFields()
+    {
+        return ['法律編號'];
+    }
+
     public static function filterFields()
     {
         return [

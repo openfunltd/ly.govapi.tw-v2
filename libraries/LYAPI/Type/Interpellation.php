@@ -21,6 +21,11 @@ class LYAPI_Type_Interpellation extends LYAPI_Type
         ];
     }
 
+    public static function getIdFields()
+    {
+        return ['質詢編號'];
+    }
+
     public static function filterFields()
     {
         return [

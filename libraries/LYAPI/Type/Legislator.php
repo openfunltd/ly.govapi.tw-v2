@@ -2,16 +2,15 @@
 
 class LYAPI_Type_Legislator extends LYAPI_Type
 {
-    public static function get_id_count()
+    public static function getIdFields()
     {
-        return 2;
+        return ['屆期', '委員姓名'];
     }
 
     public static function defaultLimit()
     {
         return 200;
     }
-
 
     public static function getRelations()
     {
