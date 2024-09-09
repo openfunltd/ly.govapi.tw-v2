@@ -71,6 +71,13 @@ class LYAPI_Type_Meet extends LYAPI_Type
         ];
     }
 
+    public static function aggMap()
+    {
+        return [
+            '委員會代號' => ['committee', ['委員會代號', '委員會名稱']],
+        ];
+    }
+
     public static function getRelations()
     {
         return [
