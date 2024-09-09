@@ -226,7 +226,7 @@ class LYAPI_SearchAction
                     $records->aggs[$sub_agg_name]->agg = $sub_agg_name;
                     $records->aggs[$sub_agg_name]->agg_fields = array_slice($agg_fields, 0, $i + 1);
                     $records->aggs[$sub_agg_name]->buckets = self::getBuckets(
-                        $obj->aggregations->{$agg_name}->buckets, $agg_fields, $i);
+                        $obj->aggregations->{$agg_name}->buckets, $agg_fields, $i, $type);
                     usort($records->aggs[$sub_agg_name]->buckets, function($a, $b) {
                         return $b->count - $a->count;
                     });
@@ -279,19 +279,20 @@ class LYAPI_SearchAction
         return $records;
     }
 
-    public static function mergeBucketByLevel($es_buckets, $agg_fields, $level, $values)
+    public static function mergeBucketByLevel($es_buckets, $agg_fields, $level, $values, $type)
     {
         $buckets = [];
         $agg_field = array_shift($agg_fields);
         foreach ($es_buckets as $es_bucket) {
             $values[$agg_field] = $es_bucket->key;
+            LYAPI_Type::run($type, 'addAggValue', [$agg_field, $es_bucket->key]);
             if ($es_bucket->key_as_string ?? false) {
                 $values[$agg_field] = $es_bucket->key_as_string;
             }
             if ($level) {
                 $buckets = array_merge($buckets,
                     self::mergeBucketByLevel(
-                        $es_bucket->{$agg_field}->buckets, $agg_fields, $level - 1, $values
+                        $es_bucket->{$agg_field}->buckets, $agg_fields, $level - 1, $values, $type
                     )
                 );
             } else {
@@ -306,8 +307,10 @@ class LYAPI_SearchAction
         return $buckets;
     }
 
-    public static function getBuckets($es_buckets, $agg_fields, $level)
+    public static function getBuckets($es_buckets, $agg_fields, $level, $type)
     {
-        return self::mergeBucketByLevel($es_buckets, $agg_fields, $level, []);
+        $buckets = self::mergeBucketByLevel($es_buckets, $agg_fields, $level, [], $type);
+        $buckets = LYAPI_Type::run($type, 'handleAggValue', [$buckets, $agg_fields, $level]);
+        return $buckets;
     }
 }

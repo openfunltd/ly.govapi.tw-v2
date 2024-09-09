@@ -56,6 +56,11 @@ class LYAPI_Type
         return [];
     }
 
+    public static function aggMap()
+    {
+        return [];
+    }
+
     public static function filterData($data, $field_map, $prefix)
     {
         if (is_array($data)) {
@@ -127,5 +132,94 @@ class LYAPI_Type
             }
         }
         return self::$_reverse_field_map[$class];
+    }
+
+    protected static $_agg_values = [];
+    protected static $_agg_values_result = [];
+    public static function addAggValue($field, $value)
+    {
+        $agg_map = static::aggMap();
+
+        if (!array_key_exists($field, $agg_map)) {
+            return;
+        }
+        $class = get_called_class();
+        if (!array_key_exists($class, self::$_agg_values)) {
+            self::$_agg_values[$class] = [];
+            self::$_agg_values_result[$class] = [];
+        }
+        if (!array_key_exists($field, self::$_agg_values[$class])) {
+            self::$_agg_values[$class][$field] = [];
+            self::$_agg_values_result[$class][$field] = [];
+        }
+        self::$_agg_values[$class][$field][$value] = $value;
+    }
+
+    public static function termSearch($class, $field, $type, $config)
+    {
+        $terms = array_keys(self::$_agg_values[$class][$field]);
+        error_log("termSearch: {$field} " . json_encode($terms));
+        $cmd = new StdClass;
+        $cmd->size = count($terms);
+        $cmd->query = new StdClass;
+        $cmd->query->terms = new StdClass;
+        $filter_fields = LYAPI_Type::run($type, 'filterFields');
+        if (array_key_exists($field, $filter_fields)) {
+            $query_field = $filter_fields[$field];
+            if (!$query_field) {
+                $query_field = LYAPI_Type::run($type, 'reverseField', [$field]);
+            }
+        }
+
+        $output_field = LYAPI_Type::run($type, 'reverseField', [$config[1]]);
+        $cmd->query->terms->{$query_field} = array_values(self::$_agg_values[$class][$field]);
+        $query_field = str_replace('.keyword', '', $query_field);
+        $output_field = str_replace('.keyword', '', $output_field);
+        $cmd->_source = [
+            $query_field,
+            $output_field,
+        ];
+        $obj = Elastic::dbQuery("/{prefix}{$type}/_search", 'GET', json_encode($cmd));
+        foreach ($obj->hits->hits as $hit) {
+            $source = $hit->_source;
+            self::$_agg_values_result[$class][$field][$source->{$query_field}] = $source->{$output_field};
+            unset(self::$_agg_values[$class][$field][$source->{$query_field}]);
+        }
+        foreach (self::$_agg_values[$class][$field] as $v) {
+            self::$_agg_values_result[$class][$field][$v] = '';
+        }
+    }
+
+    public static function getAggValueMap($field, $value, $class)
+    {
+        $agg_map = static::aggMap();
+        if (!array_key_exists($field, $agg_map)) {
+            return;
+        }
+        $map = $agg_map[$field];
+        list($type, $config) = $map;
+        if (!array_key_exists($value, self::$_agg_values_result[$class][$field])) {
+            self::termSearch($class, $field, $type, $config);
+        }
+        return self::$_agg_values_result[$class][$field][$value];
+    }
+
+    public static function handleAggValue($buckets, $agg_fields, $level)
+    {
+        $class = get_called_class();
+        if (!array_key_exists($class, self::$_agg_values)) {
+            return $buckets;
+        }
+
+        foreach ($buckets as $idx => $bucket) {
+            for ($i = 0; $i <= $level; $i ++) {
+                $k = $agg_fields[$i];
+                $v = self::getAggValueMap($k, $bucket->{$k}, $class);
+                if ($v) {
+                    $buckets[$idx]->{$k . ':str'} = $v;
+                }
+            }
+        }
+        return $buckets;
     }
 }

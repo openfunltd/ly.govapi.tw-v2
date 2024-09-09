@@ -38,6 +38,14 @@ class LYAPI_Type_Bill extends LYAPI_Type
         ];
     }
 
+    public static function aggMap()
+    {
+        return [
+            '法律編號' => ['law', ['法律編號', '名稱']],
+            '會議代碼' => ['meet', ['會議代碼', '會議標題']],
+        ];
+    }
+
     public static function queryFields()
     {
         return [
