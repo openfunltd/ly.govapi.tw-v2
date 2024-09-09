@@ -5,13 +5,13 @@ class LYAPI_Type_Bill extends LYAPI_Type
     public static function getFieldMap()
     {
         return [
+            '屆期' => '屆',
             'billNo' => '議案編號',
             'meet_id' => '會議代碼',
             'mtime' => '資料抓取時間',
             'first_time' => '提案日期',
             'last_time' => '最新進度日期',
             'laws' => '法律編號',
-            '屆期' => '屆',
         ];
     }
 
@@ -67,7 +67,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
             '提案單位/提案委員',
             '議案狀態',
             '資料抓取時間',
-            '屆期',
+            '屆',
             '議案類別',
             '提案來源',
             '會議代碼',
