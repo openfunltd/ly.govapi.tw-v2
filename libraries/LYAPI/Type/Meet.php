@@ -93,4 +93,57 @@ class LYAPI_Type_Meet extends LYAPI_Type
             ],
         ];
     }
+
+    public static function customData($data, $id)
+    {
+        if (is_array($data->{'會議資料'}) and count($data->{'會議資料'})) {
+            foreach ($data->{'會議資料'} as $idx => $meet_data) {
+                if (strlen($meet_data->{'會議編號'}) < 15) {
+                    $meet_data->ppg_url = sprintf("https://ppg.ly.gov.tw/ppg/sittings/%s/details?meetingDate=%d/%02d/%02d",
+                        $meet_data->{'會議編號'},
+                        date('Y', strtotime($meet_data->{'日期'})) - 1911,
+                        date('m', strtotime($meet_data->{'日期'})),
+                        date('d', strtotime($meet_data->{'日期'}))
+                    );
+                    if ($data->{'議事錄'} ?? false) {
+                        $data->{'議事錄'}->ppg_url = $meet_data->ppg_url;
+                    }
+                }
+                $data->{'會議資料'}[$idx] = $meet_data;
+            }
+        }
+        if ($data->{'議事錄'} ?? false) {
+            $data->{'議事錄'}->doc_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-doc/%s.doc", urlencode($data->{'會議代碼'}));
+            $data->{'議事錄'}->txt_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-txt/%s.txt", urlencode($data->{'會議代碼'}));
+            $data->{'議事錄'}->html_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-html/%s.html", urlencode($data->{'會議代碼'}));
+        }
+
+        if ($data->{'公報發言紀錄'} ?? false) {
+            foreach ($data->{'公報發言紀錄'} as &$agenda) {
+                $agenda->transcript_api = sprintf("https://%s/meet/%s/transcript/%s",
+                    $_SERVER['HTTP_HOST'],
+                    urlencode($data->{'會議代碼'}),
+                    urlencode($agenda->agenda_id)
+                );
+                $agenda->html_files = [];
+                $agenda->txt_files = [];
+                foreach ($agenda->agenda_lcidc_ids ?? [] as $id ){
+                    $agenda->html_files[] = sprintf("https://%s/gazette_agenda/%s/html", $_SERVER['HTTP_HOST'], urlencode($id));
+                    $agenda->txt_files[] = sprintf("https://lydata.ronny-s3.click/agenda-txt/LCIDC01_%s.doc", urlencode($id));
+                }
+                // https://ppg.ly.gov.tw/ppg/publications/official-gazettes/106/15/01/details
+                $comYear = substr($agenda->gazette_id, 0, 3);
+                $comVolume = substr($agenda->gazette_id, 3, strlen($agenda->gazette_id) - 5);
+                $comBookId = substr($agenda->gazette_id, -2);
+                $agenda->ppg_gazette_url = sprintf("https://ppg.ly.gov.tw/ppg/publications/official-gazettes/%d/%02d/%02d/details",
+                    $comYear,
+                    $comVolume,
+                    $comBookId
+                );
+            }
+        }
+
+        return $data;
+
+    }
 }
