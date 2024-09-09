@@ -38,6 +38,7 @@ class LYAPI_Type_Ivod extends LYAPI_Type
             '會議.會議代碼' => 'meet.id.keyword',
             '委員名稱' => '委員名稱.keyword',
             '會議資料.委員會代碼' => '',
+            '會議資料.會議代碼' => 'meet.id.keyword',
             '日期' => '',
             '影片種類' => 'type.keyword',
         ];
