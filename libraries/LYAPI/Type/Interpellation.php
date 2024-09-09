@@ -36,6 +36,13 @@ class LYAPI_Type_Interpellation extends LYAPI_Type
         ];
     }
 
+    public static function aggMap()
+    {
+        return [
+            '會議代碼' => ['meet', ['會議代碼', '會議標題']],
+        ];
+    }
+
     public static function searchFields()
     {
         return [

@@ -23,7 +23,7 @@ class LYAPI_Type_Law extends LYAPI_Type
     public static function filterFields()
     {
         return [
-            '法律編號' => '',
+            '法律編號' => 'id.keyword',
             '類別' => 'type.keyword',
             '母法編號' => 'parent.keyword',
         ];
