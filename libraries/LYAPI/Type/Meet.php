@@ -113,9 +113,21 @@ class LYAPI_Type_Meet extends LYAPI_Type
             }
         }
         if ($data->{'議事錄'} ?? false) {
-            $data->{'議事錄'}->doc_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-doc/%s.doc", urlencode($data->{'會議代碼'}));
-            $data->{'議事錄'}->txt_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-txt/%s.txt", urlencode($data->{'會議代碼'}));
-            $data->{'議事錄'}->html_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-html/%s.html", urlencode($data->{'會議代碼'}));
+            if ($agenda_lcidc_id = ($data->{'議事錄'}->agenda_lcidc_id ?? false)) {
+                $data->{'議事錄'}->doc_file = sprintf("https://lydata.ronny-s3.click/agenda-doc/LCIDC01_%s.doc", urlencode($agenda_lcidc_id));
+                $data->{'議事錄'}->txt_file = sprintf("https://lydata.ronny-s3.click/agenda-txt/LCIDC01_%s.doc", urlencode($agenda_lcidc_id));
+                $data->{'議事錄'}->html_file = sprintf("https://lydata.ronny-s3.click/agenda-html/LCIDC01_%s.doc.html", urlencode($agenda_lcidc_id));
+                $data->{'議事錄'}->source_url = sprintf("https://ppg.ly.gov.tw/ppg/publications/official-gazettes/%03d/%02d/%02d/details",
+                    $data->{'議事錄'}->comYear,
+                    $data->{'議事錄'}->comVolume,
+                    $data->{'議事錄'}->comBookId
+                );
+            } else {
+                $data->{'議事錄'}->doc_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-doc/%s.doc", urlencode($data->{'會議代碼'}));
+                $data->{'議事錄'}->txt_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-txt/%s.txt", urlencode($data->{'會議代碼'}));
+                $data->{'議事錄'}->html_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-html/%s.html", urlencode($data->{'會議代碼'}));
+                $data->{'議事錄'}->source_url = $data->{'會議資料'}[0]->ppg_url;
+            }
         }
 
         if ($data->{'公報發言紀錄'} ?? false) {
