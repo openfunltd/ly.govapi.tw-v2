@@ -164,11 +164,11 @@ class LYAPI_Type
         $cmd->query = new StdClass;
         $cmd->query->terms = new StdClass;
         $filter_fields = LYAPI_Type::run($type, 'filterFields');
-        if (array_key_exists($field, $filter_fields)) {
-            $query_field = $filter_fields[$field];
-            if (!$query_field) {
-                $query_field = LYAPI_Type::run($type, 'reverseField', [$field]);
-            }
+        if (array_key_exists($config[0], $filter_fields)) {
+            $query_field = $filter_fields[$config[0]];
+        }
+        if (!$query_field) {
+            $query_field = LYAPI_Type::run($type, 'reverseField', [$config[0]]);
         }
 
         $output_field = LYAPI_Type::run($type, 'reverseField', [$config[1]]);

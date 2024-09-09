@@ -44,6 +44,14 @@ class LYAPI_Type_Ivod extends LYAPI_Type
         ];
     }
 
+    public static function aggMap()
+    {
+        return [
+            '會議資料.委員會代碼' => ['committee', ['委員會代號', '委員會名稱']],
+            '會議.會議代碼' => ['meet', ['會議代碼', '會議標題']],
+        ];
+    }
+
     public static function sortFields()
     {
         return [
