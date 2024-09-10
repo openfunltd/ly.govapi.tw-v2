@@ -49,7 +49,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
             '會議資料.出席立委' => 'meet_data.attendLegislator.keyword',
             '日期' => '',
             '委員會代號' => '',
-            '會議編號' => 'meet_data.meetingNo.keyword',
+            '會議資料.會議編號' => 'meet_data.meetingNo.keyword',
         ];
     }
 
