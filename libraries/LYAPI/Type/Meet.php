@@ -31,6 +31,27 @@ class LYAPI_Type_Meet extends LYAPI_Type
             'meet_data.date' => '日期',
             'meet_data.startTime' => '開始時間',
             'meet_data.endTime' => '結束時間',
+            'ppg_data' => '議事網資料', // from https://ppg.ly.gov.tw/ppg/#section-2
+            'ppg_data.關係文書.bills' => '議案',
+            'ppg_data.關係文書.bills.title' => '標題',
+            'ppg_data.關係文書.bills.billNo' => '議案編號',
+            'ppg_data.關係文書.bills.comment' => '意見',
+            'ppg_data.關係文書.bills.type' => '類別',
+            'ppg_data.features' => '資訊',
+            'ppg_data.attachments' => '附件',
+            'ppg_data.attachments.filetype' => '格式',
+            'ppg_data.attachments.href' => '連結',
+            'ppg_data.attachments.title' => '標題',
+            'ppg_data.attachments.group' => '種類',
+            'ppg_data.dates' => '日期',
+            'ppg_data.links' => '連結',
+            'ppg_data.links.filetype' => '格式',
+            'ppg_data.links.href' => '連結',
+            'ppg_data.links.title' => '標題',
+            'ppg_data.links.type' => '類型',
+            'ppg_data.place' => '地點',
+            'ppg_data.title' => '標題',
+            'ppg_data.content' => '內容',
         ];
     }
 
@@ -50,6 +71,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
             '日期' => '',
             '委員會代號' => '',
             '會議資料.會議編號' => 'meet_data.meetingNo.keyword',
+            '議事網資料.關係文書.議案.議案編號' => 'ppg_data.關係文書.bills.billNo.keyword',
         ];
     }
 
@@ -104,7 +126,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
 
     public static function customData($data, $id)
     {
-        if (is_array($data->{'會議資料'}) and count($data->{'會議資料'})) {
+        if (is_array($data->{'會議資料'} ?? false) and count($data->{'會議資料'})) {
             foreach ($data->{'會議資料'} as $idx => $meet_data) {
                 if (strlen($meet_data->{'會議編號'}) < 15) {
                     $meet_data->ppg_url = sprintf("https://ppg.ly.gov.tw/ppg/sittings/%s/details?meetingDate=%d/%02d/%02d",
@@ -143,7 +165,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 $agenda->transcript_api = sprintf("https://%s/meet/%s/transcript/%s",
                     $_SERVER['HTTP_HOST'],
                     urlencode($data->{'會議代碼'}),
-                    urlencode($agenda->agenda_id)
+                    urlencode($agenda->agenda_id ?? '')
                 );
                 $agenda->html_files = [];
                 $agenda->txt_files = [];
