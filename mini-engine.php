@@ -8,6 +8,105 @@ define('MINI_ENGINE_VERSION', '0.1.0');
 
 class MiniEngine
 {
+    protected static $session_data = null;
+
+    public static function getSessionDomain()
+    {
+        return getenv('SESSION_DOMAIN') ?: $_SERVER['HTTP_HOST'];
+    }
+
+    public static function getSessionTimeout()
+    {
+        return 60 * 60 * 24 * 30; // 30 days
+    }
+
+    public static function initSessionData()
+    {
+        if (is_null(self::$session_data)) {
+            $session_secret = getenv('SESSION_SECRET');
+            if (!$session_secret) {
+                throw new Exception("SESSION_SECRET is not set.");
+            }
+
+            $session = $_COOKIE[session_name()] ?? '';
+            $session = explode('|', $session, 2);
+            if (count($session) != 2) {
+                self::$session_data = new StdClass;
+                return;
+            }
+
+            $sig = $session[0];
+            $data = $session[1];
+            if ($sig != self::sessionSignature($data . self::getSessionDomain() . $session_secret)) {
+                self::$session_data = new StdClass;
+                return;
+            }
+
+            self::$session_data = json_decode($data);
+        }
+    }
+
+    public static function setSession($key, $value)
+    {
+        self::initSessionData();
+        if (self::$session_data->{$key} === $value) {
+            return;
+        }
+        self::$session_data->{$key} = $value;
+
+        $session_secret = getenv('SESSION_SECRET');
+        if (!$session_secret) {
+            throw new Exception("SESSION_SECRET is not set.");
+        }
+
+        $data = json_encode(self::$session_data);
+        $sig = self::sessionSignature(json_encode(self::$session_data) . self::getSessionDomain() . $session_secret);
+
+        setcookie(
+            session_name(), // name
+            $sig . '|' . $data, // value
+            self::getSessionTimeout() ? time() + self::getSessionTimeout() : null, // expire
+            '/', // path
+            self::getSessionDomain(), // domain
+            true // secure
+        );
+    }
+
+    public static function sessionSignature($data)
+    {
+        return hash_hmac('sha256', $data, getenv('SESSION_SECRET'));
+    }
+
+    public static function getSession($key)
+    {
+        self::initSessionData();
+        return self::$session_data->{$key} ?? null;
+    }
+
+    protected static $db = null;
+    public static function getDb()
+    {
+        if (is_null(self::$db)) {
+            $url = getenv('DATABASE_URL');
+            if (!$url) {
+                throw new Exception("DATABASE_URL is not set.");
+            }
+
+            $url = parse_url($url);
+            $dsn = "{$url['scheme']}:host={$url['host']};port={$url['port']};dbname=" . ltrim($url['path'], '/');
+            self::$db = new PDO($dsn, $url['user'], $url['pass']);
+            self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        }
+        return self::$db;
+    }
+
+    public static function dbExecute($sql, $params = [])
+    {
+        $stmt = self::getDb()->prepare($sql);
+        $stmt->execute($params);
+        return $stmt;
+    }
+
     public static function initEnv()
     {
         self::registerAutoLoad();
@@ -167,7 +266,8 @@ class MiniEngine
         $uri = explode('/', $uri);
         $controller = strtolower($uri[0] ?? 'index') ?: 'index';
         $action = strtolower($uri[1] ?? 'index') ?: 'index';
-        return [$controller, $action];
+        $params = array_map('urldecode', array_slice($uri, 2));
+        return [$controller, $action, $params];
     }
 }
 
@@ -182,6 +282,7 @@ class MiniEngine_Controller_NotFound extends Exception
 class MiniEngine_Controller_ViewObject
 {
     protected $_data = [];
+    protected $_yield = [];
 
     public function __set($name, $value)
     {
@@ -196,6 +297,35 @@ class MiniEngine_Controller_ViewObject
     public function __isset($name)
     {
         return isset($this->_data[$name]);
+    }
+
+    protected $_current_yield = [];
+    public function yield_start($name)
+    {
+        ob_start();
+        $this->_yield[$name] = '';
+        array_push($this->_current_yield, $name);
+    }
+
+    public function yield_end()
+    {
+        $name = array_pop($this->_current_yield);
+        $this->_yield[$name] = ob_get_clean();
+    }
+
+    public function yield_set($name, $value)
+    {
+        $this->_yield[$name] = $value;
+    }
+
+    public function yield($name)
+    {
+        return $this->_yield[$name] ?? '';
+    }
+
+    public function if($condition, $true, $false = '')
+    {
+        return $condition ? $true : $false;
     }
 
     public function partial($file, $data = null)
@@ -360,14 +490,22 @@ EOF
         error_log("created init.inc.php");
 
         // Create config.sample.inc.php
+        $session_secret = substr(str_shuffle(str_repeat('0123456789abcdefghijklmnopqrstuvwxyz', 12)), 0, 12);
         file_put_contents('config.sample.inc.php', <<<EOF
 <?php
 
-putenv('APP_NAME', 'Mini Engine sample application');
+putenv('APP_NAME=Mini Engine sample application');
+putenv('DATABASE_URL=pgsql://user:password@localhost:5432/dbname');
+putenv('SESSION_SECRET=$session_secret');
+putenv('SESSION_DOMAIN='); // optional
 
 EOF
         );
         error_log("created config.sample.inc.php");
+        if (!file_exists('config.inc.php')) {
+            copy('config.sample.inc.php', 'config.inc.php');
+            error_log("created config.inc.php");
+        }
 
         // Create .gitignore
         file_put_contents('.gitignore', <<<EOF
