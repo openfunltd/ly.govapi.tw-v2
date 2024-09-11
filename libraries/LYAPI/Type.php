@@ -81,7 +81,7 @@ class LYAPI_Type
                 $k = substr($k, strlen($prefix));
             }
             if (property_exists($data, $k)) {
-                $data->{$v} = self::filterData($data->{$k}, $field_map, "{$k}.");
+                $data->{$v} = self::filterData($data->{$k}, $field_map, rtrim($prefix . $k, '.') . '.');
                 unset($data->{$k});
             }
         }
