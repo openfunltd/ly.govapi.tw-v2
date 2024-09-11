@@ -112,9 +112,15 @@ class MiniEngine
         }
     }
 
+    protected static function ucfirst($string)
+    {
+        // foo_bar_baz to FooBarBaz
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
+    }
+
     protected static function runControllerAction($controller, $action, $params)
     {
-        $controller_class = ucfirst($controller) . 'Controller';
+        $controller_class = self::ucfirst($controller) . 'Controller';
         $controller_file = self::getRoot() . '/controllers/' . $controller_class . '.php';
         if (!file_exists($controller_file)) {
             return self::runControllerAction('error', 'error', [new MiniEngine_Controller_NotFound("Controller not found: {$controller}:{$action}")]);
