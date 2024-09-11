@@ -82,7 +82,9 @@ class LYAPI_Type
             }
             if (property_exists($data, $k)) {
                 $data->{$v} = self::filterData($data->{$k}, $field_map, rtrim($prefix . $k, '.') . '.');
-                unset($data->{$k});
+                if ($k != $v) {
+                    unset($data->{$k});
+                }
             }
         }
         return $data;
@@ -91,6 +93,15 @@ class LYAPI_Type
     public static function buildData($data, $id)
     {
         $field_map = static::getFieldMap();
+        foreach ($field_map as $k => $v) {
+            if (strpos($k, '.') === false) {
+                continue;
+            }
+            $prefix = implode('.', array_slice(explode('.', $k), 0, -1));
+            if (!array_key_exists($prefix, $field_map)) {
+                $field_map[$prefix] = array_pop(explode('.', $prefix));
+            }
+        }
         if (array_key_exists('_id', $field_map)) {
             $data->{$field_map['_id']} = $id;
         }
@@ -126,6 +137,9 @@ class LYAPI_Type
                     $terms = explode('.', $k);
                     $p = implode('.', array_slice($terms, 0, -1));
 
+                    if (!array_key_exists($p, $prefix)) {
+                        $prefix[$p] = array_shift(explode('.', $p));
+                    }
                     $v = $prefix[$p] . '.' . $v;
                 }
                 self::$_reverse_field_map[$class][$v] = $k;
