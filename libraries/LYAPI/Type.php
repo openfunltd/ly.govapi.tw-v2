@@ -137,7 +137,7 @@ class LYAPI_Type
     /**
      * 處理將 elastic 的資料轉換成 api 輸出的格式
      */
-    public static function buildData($data, $id)
+    public static function buildData($data, $id, $in_collection = false)
     {
         $field_map = static::getFieldMap();
         foreach ($field_map as $k => $v) {
@@ -152,7 +152,13 @@ class LYAPI_Type
         if (array_key_exists('_id', $field_map)) {
             $data->{$field_map['_id']} = $id;
         }
-        $data = self::filterData($data, $field_map, '', false);
+        if ($in_collection) {
+            $data = self::filterData($data, $field_map, '', false);
+        } else {
+            $checking_data = clone $data;
+            self::filterData($checking_data, $field_map, '', true);
+            $data = self::filterData($data, $field_map, '', false);
+        }
         $data = static::customData($data, $id);
         return $data;
     }
@@ -282,12 +288,18 @@ class LYAPI_Type
     {
         $agg_map = static::aggMap();
         if (!array_key_exists($field, $agg_map)) {
-            return;
+            return null;
+        }
+        if (!array_key_exists($class, self::$_agg_values_result)) {
+            return null;
+        }
+        if (is_null($value)) {
+            return null;
         }
         $map = $agg_map[$field];
         list($type, $config) = $map;
         if (is_array($value)) {
-            $value = array_map(function ($v) use ($field, $type, $config) {
+            $value = array_map(function ($v) use ($field) {
                 return self::getAggValueMap($field, $v, get_called_class());
             }, $value);
             return $value;

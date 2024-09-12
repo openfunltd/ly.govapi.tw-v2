@@ -213,7 +213,7 @@ class LYAPI_SearchAction
         $records->{$return_key} = [];
         LYAPI_Type::run($type, 'checkHitRecords', [$obj->hits->hits]);
         foreach ($obj->hits->hits as $hit) {
-            $records->{$return_key}[] = LYAPI_Type::run($type, 'buildData', [$hit->_source, $hit->_id]);
+            $records->{$return_key}[] = LYAPI_Type::run($type, 'buildData', [$hit->_source, $hit->_id, true]);
         }
         if (self::getParams('agg')) {
             $records->aggs = [];
@@ -268,7 +268,7 @@ class LYAPI_SearchAction
             }
             $query_string = implode('&', $query_string);
             if ($rel['type'] == '_function') {
-                $data = LYAPI_Type::run($type, 'buildData', [$obj->_source, $obj->_id]);
+                $data = LYAPI_Type::run($type, 'buildData', [$obj->_source, $obj->_id, false]);
                 return LYAPI_Type::run($type, $rel['function'], [$data]);
             }
             return self::getCollections($rel['type'], $query_string);
@@ -276,7 +276,7 @@ class LYAPI_SearchAction
         $records = new StdClass;
         $records->error = false;
         $records->id = $ids;
-        $records->data = LYAPI_Type::run($type, 'buildData', [$obj->_source, $hit->_id]);
+        $records->data = LYAPI_Type::run($type, 'buildData', [$obj->_source, $hit->_id, false]);
         return $records;
     }
 
