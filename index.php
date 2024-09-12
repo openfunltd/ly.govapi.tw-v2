@@ -6,6 +6,10 @@ MiniEngine::dispatch(function($uri){
         return ['index', 'robots'];
     }
 
+    if (preg_match('#^/gazette_agenda_doc/([0-9_]+)/([^/]+)$#', $uri, $matches)) {
+        return ['gazette_agenda_doc', 'show', [$matches[1], $matches[2]]];
+    }
+
     // 處理 /bills, /bill/{id} => bill
     //      /legislators, /legislator/{name} => legislator
     // 依照有沒有 librarys/LYAPI/Type/{Bill,Legislator,Committee}.php 決定

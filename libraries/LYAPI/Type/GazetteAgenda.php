@@ -72,12 +72,18 @@ class LYAPI_Type_GazetteAgenda extends LYAPI_Type
             $data->{'期'},
             $data->{'冊別'}
         );
-        $data->{'公報HTML網址'} = [];
-        foreach ($data->{'doc檔案下載位置'} as $doc_url) {
+        $data->{'處理後公報網址'} = [];
+        foreach ($data->{'doc檔案下載位置'} as $idx => $doc_url) {
             if (!preg_match('#LCIDC01_([0-9_]+)#', $doc_url, $matches)) {
                 continue;
             }
-            $data->{'公報HTML網址'}[] = sprintf("https://%s/gazette_agenda/%s/html", $_SERVER['HTTP_HOST'], urlencode($matches[1]));
+            foreach (['html', 'tikahtml', 'txt', 'parsed'] as $type) {
+                $data->{'處理後公報網址'}[] = [
+                    'type' => $type,
+                    'no' => $idx,
+                    'url' => sprintf("https://%s/gazette_agenda_doc/%s/%s", $_SERVER['HTTP_HOST'], $matches[1], $type),
+                ];
+            }
         }
 
         return $data;
