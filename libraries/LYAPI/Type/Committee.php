@@ -19,6 +19,22 @@ class LYAPI_Type_Committee extends LYAPI_Type
         return ['委員會代號'];
     }
 
+    public static function aggMap()
+    {
+        return [
+            '委員會類別' => ['_function', ['LYAPI_Type_Committee', 'aggComtType']],
+        ];
+    }
+
+    public static function aggComtType($v)
+    {
+        $map = [
+            1 => '常設委員會',
+            2 => '特種委員會',
+            3 => '國會改革前舊委員會名稱',
+        ];
+        return $map[$v];
+    }
 
     public static function filterFields()
     {
