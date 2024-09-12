@@ -212,6 +212,9 @@ class LYAPI_Type
         }
         $map = $agg_map[$field];
         list($type, $config) = $map;
+        if ($type == '_function') {
+            return call_user_func($config, $value);
+        }
         if (!array_key_exists($value, self::$_agg_values_result[$class][$field])) {
             self::termSearch($class, $field, $type, $config);
         }
