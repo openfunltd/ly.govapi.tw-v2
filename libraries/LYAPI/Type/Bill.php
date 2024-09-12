@@ -74,6 +74,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
             '會期',
             '字號',
             '提案編號',
+            '法律編號',
         ];
     }
 
