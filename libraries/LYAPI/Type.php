@@ -97,11 +97,11 @@ class LYAPI_Type
     /**
      * 利用 $field_map ，將單筆資料的 elastic 的資料欄位改名成 api 輸出的欄位
      */
-    public static function filterData($data, $field_map, $prefix)
+    public static function filterData($data, $field_map, $prefix, $only_check_agg_map = false)
     {
         if (is_array($data)) {
-            $data = array_map(function ($v) use ($field_map, $prefix) {
-                return self::filterData($v, $field_map, $prefix);
+            $data = array_map(function ($v) use ($field_map, $prefix, $only_check_agg_map) {
+                return self::filterData($v, $field_map, $prefix, $only_check_agg_map);
             }, $data);
             return $data;
         }
@@ -117,7 +117,15 @@ class LYAPI_Type
                 $k = substr($k, strlen($prefix));
             }
             if (property_exists($data, $k)) {
-                $data->{$v} = self::filterData($data->{$k}, $field_map, rtrim($prefix . $k, '.') . '.');
+                $data->{$v} = self::filterData($data->{$k}, $field_map, rtrim($prefix . $k, '.') . '.', $only_check_agg_map);
+                if ($only_check_agg_map) {
+                    static::addAggValue($v, $data->{$v});
+                } else {
+                    $v_str = self::getAggValueMap($v, $data->{$v}, get_called_class());
+                    if ($v_str) {
+                        $data->{$v . ':str'} = $v_str;
+                    }
+                }
                 if ($k != $v) {
                     unset($data->{$k});
                 }
@@ -144,7 +152,7 @@ class LYAPI_Type
         if (array_key_exists('_id', $field_map)) {
             $data->{$field_map['_id']} = $id;
         }
-        $data = self::filterData($data, $field_map, '');
+        $data = self::filterData($data, $field_map, '', false);
         $data = static::customData($data, $id);
         return $data;
     }
@@ -208,6 +216,15 @@ class LYAPI_Type
         if (!array_key_exists($field, $agg_map)) {
             return;
         }
+        if (!$value) {
+            return;
+        }
+        if (is_array($value)) {
+            foreach ($value as $v) {
+                static::addAggValue($field, $v);
+            }
+            return;
+        }
         $class = get_called_class();
         if (!array_key_exists($class, self::$_agg_values)) {
             self::$_agg_values[$class] = [];
@@ -269,6 +286,12 @@ class LYAPI_Type
         }
         $map = $agg_map[$field];
         list($type, $config) = $map;
+        if (is_array($value)) {
+            $value = array_map(function ($v) use ($field, $type, $config) {
+                return self::getAggValueMap($field, $v, get_called_class());
+            }, $value);
+            return $value;
+        }
         if ($type == '_function') {
             return call_user_func($config, $value);
         }
@@ -298,5 +321,27 @@ class LYAPI_Type
             }
         }
         return $buckets;
+    }
+
+    public static function checkHitRecords($hits)
+    {
+        $agg_map = static::aggMap();
+        if (!$agg_map) {
+            return $hits;
+        }
+        $field_map = static::getFieldMap();
+        foreach ($field_map as $k => $v) {
+            if (strpos($k, '.') === false) {
+                continue;
+            }
+            $prefix = implode('.', array_slice(explode('.', $k), 0, -1));
+            if (!array_key_exists($prefix, $field_map)) {
+                $field_map[$prefix] = array_pop(explode('.', $prefix));
+            }
+        }
+        foreach ($hits as $hit) {
+            $source = clone $hit->_source;
+            self::filterData($source, $field_map, '', true);
+        }
     }
 }
