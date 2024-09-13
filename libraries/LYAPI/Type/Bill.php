@@ -92,7 +92,27 @@ class LYAPI_Type_Bill extends LYAPI_Type
                 'type' => '_function',
                 'function' => 'getRelatedBills',
             ],
+            'doc_html' => [
+                'type' => '_function',
+                'function' => 'getDocHTML',
+            ],
         ];
+    }
+
+    public static function getDocHTML($data)
+    {
+        $billNo = $data->議案編號;
+        header('Content-Type: text/html');
+        $content = file_get_contents(sprintf("https://lydata.ronny-s3.click/bill-doc-parsed/html/%s.doc.gz", $billNo));
+        $content = gzdecode($content);
+        if (strpos($content, '{') === 0) {
+            $content = json_decode($content);
+            $content = $content->content;
+            echo base64_decode($content);
+        } else {
+            echo $content;
+        }
+        exit;
     }
 
     public static function getRelatedBills($data)
@@ -307,6 +327,15 @@ class LYAPI_Type_Bill extends LYAPI_Type
 
     public static function customData($data, $id)
     {
+        foreach ($data->{'相關附件'} as $idx => $attachment) {
+            if (strpos($attachment->{'名稱'}, '關係文書DOC') !== false) {
+                $basename = basename($attachment->{'網址'}, '.doc');
+                $data->{'相關附件'}[$idx]->{'HTML結果'} = sprintf("https://%s/bill_doc/%s/html"
+                    , $_SERVER['HTTP_HOST']
+                    , urlencode($basename)
+                );
+            }
+        }
         $data->url = sprintf("https://ppg.ly.gov.tw/ppg/bills/%s/details", urlencode($data->議案編號));
         return $data;
     }
