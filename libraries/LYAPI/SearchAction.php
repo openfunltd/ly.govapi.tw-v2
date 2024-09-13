@@ -282,7 +282,8 @@ class LYAPI_SearchAction
         foreach ($records->supported_relations as $k => $v) {
             $id = implode('-', array_map('urlencode', $ids));
             $records->relations[] = [
-                'url' => "/{$type}/{$id}/{$k}",
+                'url' => sprintf("https://%s/%s/%s/%s",
+                    $_SERVER['HTTP_HOST'], $type, $id, $k),
                 'name' => $k,
             ];
         }
