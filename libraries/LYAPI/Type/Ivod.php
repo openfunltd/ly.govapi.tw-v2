@@ -58,4 +58,24 @@ class LYAPI_Type_Ivod extends LYAPI_Type
             '會議時間',
         ];
     }
+
+    public static function outputFields()
+    {
+        return [
+            'video_url',
+            '會議時間',
+            '會議名稱',
+            '委員名稱',
+            '影片長度',
+            '委員發言時間',
+            'IVOD_ID',
+            'IVOD_URL',
+            '日期',
+            '會議資料',
+            '影片種類',
+            '開始時間',
+            '結束時間',
+            '支援功能',
+        ];
+    }
 }
