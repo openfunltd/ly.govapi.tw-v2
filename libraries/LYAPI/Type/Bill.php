@@ -96,6 +96,12 @@ class LYAPI_Type_Bill extends LYAPI_Type
                 'type' => '_function',
                 'function' => 'getDocHTML',
             ],
+            'meets' => [
+                'type' => 'meet',
+                'map' => [
+                    '議案編號' => '議事網資料.關係文書.議案.議案編號',
+                ],
+            ],
         ];
     }
 
