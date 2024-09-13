@@ -277,6 +277,16 @@ class LYAPI_SearchAction
         $records->error = false;
         $records->id = $ids;
         $records->data = LYAPI_Type::run($type, 'buildData', [$obj->_source, $hit->_id, false]);
+        $records->supported_relations = LYAPI_Type::run($type, 'getRelations');
+        $records->relations = [];
+        foreach ($records->supported_relations as $k => $v) {
+            $id = implode('-', array_map('urlencode', $ids));
+            $records->relations[] = [
+                'url' => "/{$type}/{$id}/{$k}",
+                'name' => $k,
+            ];
+        }
+
         return $records;
     }
 
