@@ -33,7 +33,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
             '議案狀態' => '議案狀態.keyword',
             '會議代碼' => 'meet_id.keyword',
             '提案來源' => '提案來源.keyword',
-            '議案編號' => 'BillNo.keyword',
+            '議案編號' => 'billNo.keyword',
             '提案編號' => '提案編號.keyword',
         ];
     }
