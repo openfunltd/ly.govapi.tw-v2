@@ -23,6 +23,7 @@ class LYAPI_Type_LawContent extends LYAPI_Type
         return [
             '法律編號' => 'law_id.keyword',
             '版本編號' => 'version_id.keyword',
+            '順序' => '',
         ];
     }
 
@@ -49,6 +50,8 @@ class LYAPI_Type_LawContent extends LYAPI_Type
     public static function sortFields()
     {
         return [
+            '法律編號',
+            '版本編號',
             '順序<',
         ];
     }
