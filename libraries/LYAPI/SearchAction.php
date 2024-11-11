@@ -73,6 +73,7 @@ class LYAPI_SearchAction
             $output_fields = null;
         }
 
+        $filter_fields = LYAPI_Type::run($type, 'filterFields');
         $default_sort_fields = LYAPI_Type::run($type, 'sortFields');
         $sort_fields = $default_sort_fields;
         if ($sort_fields) {
@@ -86,12 +87,17 @@ class LYAPI_SearchAction
                     $way = 'asc';
                     $field_name = substr($field_name, 0, -1);
                 }
-                $cmd->sort->{LYAPI_Type::run($type, 'reverseField', [$field_name])} = $way;
+                if (array_key_exists($field_name, $filter_fields) and $filter_fields[$field_name] !== '') {
+                    // 如果有對應的 filterFields，就用 filterFields
+                    $es_field_name = $filter_fields[$field_name];
+                } else {
+                    // 沒有對應的就用 getFieldMap
+                    $es_field_name = LYAPI_Type::run($type, 'reverseField', [$field_name]);
+                }
+                $cmd->sort->{$es_field_name} = $way;
             }
             $records->sort = $sort_fields;
         }
-
-        $filter_fields = LYAPI_Type::run($type, 'filterFields');
 
         foreach ($filter_fields as $field_name => $es_field_name) {
             if (self::getParams($field_name)) {
