@@ -12,6 +12,12 @@ class LYAPI_Type_Law extends LYAPI_Type
             'parent' => '母法編號',
             'name' => '名稱',
             'name_other' => '其他名稱',
+            'categories' => '主管機關',
+            'status' => '法律狀態',
+            'versions' => '版本',
+            'versions.date' => '日期',
+            'versions.action' => '動作',
+            'versions.version_id' => '版本編號',
         ];
     }
 
@@ -26,6 +32,8 @@ class LYAPI_Type_Law extends LYAPI_Type
             '法律編號' => 'id.keyword',
             '類別' => 'type.keyword',
             '母法編號' => 'parent.keyword',
+            '法律狀態' => 'status.keyword',
+            '主管機關' => 'categories.keyword',
         ];
     }
 
