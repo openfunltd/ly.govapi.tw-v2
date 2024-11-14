@@ -36,4 +36,16 @@ class LYAPI_Type_Gazette extends LYAPI_Type
             '冊別',
         ];
     }
+
+    public static function getRelations()
+    {
+        return [
+            'agendas' => [
+                'type' => 'gazette_agenda',
+                'map' => [
+                    '公報編號' => '公報編號',
+                ],
+            ],
+        ];
+    }
 }
