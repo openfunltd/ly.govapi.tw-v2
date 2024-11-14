@@ -50,6 +50,12 @@ class LYAPI_Type_Law extends LYAPI_Type
                     '法律編號' => '法律編號',
                 ],
             ],
+            'versions' => [
+                'type' => 'law_version',
+                'map' => [
+                    '法律編號' => '法律編號',
+                ],
+            ],
         ];
     }
 }

@@ -38,4 +38,16 @@ class LYAPI_Type_LawVersion extends LYAPI_Type
             '日期<',
         ];
     }
+
+    public static function getRelations()
+    {
+        return [
+            'contents' => [
+                'type' => 'law_content',
+                'map' => [
+                    '版本編號' => '版本編號',
+                ],
+            ],
+        ];
+    }
 }
