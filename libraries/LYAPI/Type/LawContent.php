@@ -18,6 +18,11 @@ class LYAPI_Type_LawContent extends LYAPI_Type
         ];
     }
 
+    public static function getIdFields()
+    {
+        return ['法條編號'];
+    }
+
     public static function filterFields()
     {
         return [
