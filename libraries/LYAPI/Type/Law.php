@@ -14,10 +14,6 @@ class LYAPI_Type_Law extends LYAPI_Type
             'name_other' => '其他名稱',
             'categories' => '主管機關',
             'status' => '法律狀態',
-            'versions' => '版本',
-            'versions.date' => '日期',
-            'versions.action' => '動作',
-            'versions.version_id' => '版本編號',
         ];
     }
 
