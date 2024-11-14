@@ -35,6 +35,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
             '提案來源' => '提案來源.keyword',
             '議案編號' => 'billNo.keyword',
             '提案編號' => '提案編號.keyword',
+            '字號' => '字號.keyword',
         ];
     }
 
