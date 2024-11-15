@@ -14,6 +14,10 @@ class LYAPI_Type_Law extends LYAPI_Type
             'name_other' => '其他名稱',
             'categories' => '主管機關',
             'status' => '法律狀態',
+            'latest_version' => '最新版本',
+            'latest_version.date' => '日期',
+            'latest_version.action' => '動作', 
+            'latest_version.version_id' => '版本編號',
         ];
     }
 
@@ -30,6 +34,7 @@ class LYAPI_Type_Law extends LYAPI_Type
             '母法編號' => 'parent.keyword',
             '法律狀態' => 'status.keyword',
             '主管機關' => 'categories.keyword',
+            '最新版本.日期' => 'latest_version.date',
         ];
     }
 
@@ -56,6 +61,14 @@ class LYAPI_Type_Law extends LYAPI_Type
                     '法律編號' => '法律編號',
                 ],
             ],
+        ];
+    }
+
+    public static function sortFields()
+    {
+        return [
+            '最新版本.日期',
+            '法律編號',
         ];
     }
 }
