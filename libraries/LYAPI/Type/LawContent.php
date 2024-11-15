@@ -61,7 +61,7 @@ class LYAPI_Type_LawContent extends LYAPI_Type
     {
         return [
             '法律編號',
-            '版本編號',
+            '版本編號<',
             '順序<',
         ];
     }
