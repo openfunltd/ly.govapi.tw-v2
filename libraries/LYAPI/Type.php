@@ -137,7 +137,7 @@ class LYAPI_Type
     /**
      * 處理將 elastic 的資料轉換成 api 輸出的格式
      */
-    public static function buildData($data, $id, $in_collection = false)
+    public static function buildData($data, $id, $in_collection = false, $highlight = null)
     {
         $field_map = static::getFieldMap();
         foreach ($field_map as $k => $v) {
@@ -158,6 +158,12 @@ class LYAPI_Type
             $checking_data = clone $data;
             self::filterData($checking_data, $field_map, '', true);
             $data = self::filterData($data, $field_map, '', false);
+        }
+        if (!is_null($highlight)) {
+            $highlight = self::filterData($highlight, $field_map, '', false);
+            foreach ($highlight as $k => $v) {
+                $data->{$k . ':highlight'} = $v;
+            }
         }
         $data = static::customData($data, $id);
         return $data;

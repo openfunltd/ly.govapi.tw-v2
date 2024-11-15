@@ -160,6 +160,14 @@ class LYAPI_SearchAction
                     'fields' => $query_fields,
                 ],
             ];
+            $cmd->highlight = (object)[
+                'fields' => (object)[
+                    '*' => (object)[
+                        'pre_tags' => ['<em>'],
+                        'post_tags' => ['</em>'],
+                    ],
+                ],
+            ];
         }
 
         if (self::getParams('agg')) {
@@ -219,7 +227,7 @@ class LYAPI_SearchAction
         $records->{$return_key} = [];
         LYAPI_Type::run($type, 'checkHitRecords', [$obj->hits->hits]);
         foreach ($obj->hits->hits as $hit) {
-            $records->{$return_key}[] = LYAPI_Type::run($type, 'buildData', [$hit->_source, $hit->_id, true]);
+            $records->{$return_key}[] = LYAPI_Type::run($type, 'buildData', [$hit->_source, $hit->_id, true, $hit->highlight]);
         }
         if (self::getParams('agg')) {
             $records->aggs = [];
