@@ -11,6 +11,8 @@ class LYAPI_Type_LawVersion extends LYAPI_Type
             'version_id' => '版本編號',
             'date' => '日期',
             'action' => '動作',
+            'history' => '歷程',
+            'current' => '現行版本',
         ];
     }
 
@@ -21,6 +23,9 @@ class LYAPI_Type_LawVersion extends LYAPI_Type
             '版本編號' => 'version_id.keyword',
             '日期' => 'date',
             '動作' => 'action.keyword',
+            '歷程.主提案' => 'history.主提案.keyword',
+            '歷程.進度' => 'history.進度.keyword',
+            '現行版本' => 'current.keyword',
         ];
     }
 
