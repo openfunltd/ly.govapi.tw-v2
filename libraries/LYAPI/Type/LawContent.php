@@ -15,6 +15,8 @@ class LYAPI_Type_LawContent extends LYAPI_Type
             'section_name' => '章名',
             'law_content_id' => '法條編號',
             'reason' => '立法理由',
+            'current' => '現行版',
+            'version_trace' => '版本追蹤',
         ];
     }
 
@@ -29,6 +31,9 @@ class LYAPI_Type_LawContent extends LYAPI_Type
             '法律編號' => 'law_id.keyword',
             '版本編號' => 'version_id.keyword',
             '順序' => '',
+            '條號' => 'rule_no.keyword',
+            '現行版' => 'current',
+            '版本追蹤' => 'version_trace',
         ];
     }
 
