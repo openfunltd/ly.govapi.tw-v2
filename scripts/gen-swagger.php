@@ -149,7 +149,20 @@ $data = [
     ],
 ];
 
-$data['paths'] = [];
+$data['paths'] = [
+    '/stat' => [
+        'get' => [
+            'tags' => ['Stat'],
+            'summary' => '取得統計資料',
+            'operationId' => 'getStat',
+            'responses' => (object)[  // 要轉成 stdClass 否則 key 就算加了引號還是會被轉成數字
+                '200' => [
+                    'description' => '統計資料',
+                ],
+            ],
+        ],
+    ],
+];
 
 foreach ($auto_gen_files as $file) {
     foreach (glob($file) as $f) {

@@ -3,6 +3,15 @@ info:
   title: '立法院 API v2'
   version: '2.0.0'
 paths:
+  /stat:
+    get:
+      tags:
+        - Stat
+      summary: '取得統計資料'
+      operationId: 'getStat'
+      responses:
+        200:
+          description: '統計資料'
   /bills:
     get:
       tags:
