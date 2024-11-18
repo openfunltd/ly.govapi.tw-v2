@@ -149,12 +149,163 @@ paths:
           required: true
           schema:
             type: 'string'
-          example: '1111102070100100'
+          example: '203110077970000'
       responses:
         200:
           description: '議案資料'
         404:
           description: '找不到議案資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /bills/{billNo}/related_bills:
+    get:
+      tags:
+        - Bill
+      summary: '取得相關議案列表'
+      operationId: 'getBillRelatedBills'
+      parameters:
+        -
+          name: 'billNo'
+          description: '議案編號'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '203110077970000'
+      responses:
+        200:
+          description: '相關議案資料'
+        404:
+          description: '找不到相關議案資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /bills/{billNo}/doc_html:
+    get:
+      tags:
+        - Bill
+      summary: '取得議案文件 HTML 內容列表'
+      operationId: 'getBillDocHtml'
+      parameters:
+        -
+          name: 'billNo'
+          description: '議案編號'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '203110077970000'
+      responses:
+        200:
+          description: '議案文件 HTML 內容資料'
+        404:
+          description: '找不到議案文件 HTML 內容資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /bills/{billNo}/meets:
+    get:
+      tags:
+        - Bill
+      summary: '取得議案相關會議列表'
+      operationId: 'getBillMeets'
+      parameters:
+        -
+          name: 'billNo'
+          description: '議案編號'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '203110077970000'
+        -
+          name: '屆'
+          in: 'query'
+          description: '屆 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議代碼'
+          in: 'query'
+          description: '會議代碼 [例: 院會-11-2-6]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會期'
+          in: 'query'
+          description: '會期 [例: 2]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議種類'
+          in: 'query'
+          description: '會議種類 [例: 院會] (TODO: enum)'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會議資料.出席委員'
+          in: 'query'
+          description: '會議資料.出席委員 [例: 陳秀寳]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '日期'
+          in: 'query'
+          description: '日期 [例: 2024-10-25]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '委員會代號'
+          in: 'query'
+          description: '委員會代號 [例: 23]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議資料.會議編號'
+          in: 'query'
+          description: '會議資料.會議編號 [例: 2024102368]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議事網資料.關係文書.議案.議案編號'
+          in: 'query'
+          description: '議事網資料.關係文書.議案.議案編號 [例: 202110071090000]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '議案相關會議資料'
+        404:
+          description: '找不到議案相關會議資料'
           content:
             application/json:
               schema:
@@ -229,6 +380,109 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /committees/{comtCd}/meets:
+    get:
+      tags:
+        - Committee
+      summary: '取得委員會相關會議列表'
+      operationId: 'getCommitteeMeets'
+      parameters:
+        -
+          name: 'comtCd'
+          description: '委員會代號'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '15'
+        -
+          name: '屆'
+          in: 'query'
+          description: '屆 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議代碼'
+          in: 'query'
+          description: '會議代碼 [例: 院會-11-2-6]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會期'
+          in: 'query'
+          description: '會期 [例: 2]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議種類'
+          in: 'query'
+          description: '會議種類 [例: 院會] (TODO: enum)'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會議資料.出席委員'
+          in: 'query'
+          description: '會議資料.出席委員 [例: 陳秀寳]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '日期'
+          in: 'query'
+          description: '日期 [例: 2024-10-25]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '委員會代號'
+          in: 'query'
+          description: '委員會代號 [例: 23]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議資料.會議編號'
+          in: 'query'
+          description: '會議資料.會議編號 [例: 2024102368]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議事網資料.關係文書.議案.議案編號'
+          in: 'query'
+          description: '議事網資料.關係文書.議案.議案編號 [例: 202110071090000]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '委員會相關會議資料'
+        404:
+          description: '找不到委員會相關會議資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /gazettes:
     get:
       tags:
@@ -295,6 +549,74 @@ paths:
           description: '公報資料'
         404:
           description: '找不到公報資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /gazettes/{id}/agendas:
+    get:
+      tags:
+        - Gazette
+      summary: '取得公報所含的公報目錄列表'
+      operationId: 'getGazetteAgendas'
+      parameters:
+        -
+          name: 'id'
+          description: '公報編號'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '1137701'
+        -
+          name: '公報編號'
+          in: 'query'
+          description: '公報編號 [例: 1137701]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '卷'
+          in: 'query'
+          description: '卷 [例: 113]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '屆'
+          in: 'query'
+          description: '屆 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議日期'
+          in: 'query'
+          description: '會議日期 [例: 2024-10-04]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '公報所含的公報目錄資料'
+        404:
+          description: '找不到公報所含的公報目錄資料'
           content:
             application/json:
               schema:
@@ -683,6 +1005,229 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /laws/{id}/bills:
+    get:
+      tags:
+        - Law
+      summary: '取得法律相關議案列表'
+      operationId: 'getLawBills'
+      parameters:
+        -
+          name: 'id'
+          description: '法律編號'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '09200015'
+        -
+          name: '屆'
+          in: 'query'
+          description: '議案所屬屆期 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會期'
+          in: 'query'
+          description: '議案所屬會期 [例: 2]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '議案流程.狀態'
+          in: 'query'
+          description: '議案流程中曾經有過狀態，字串需完全符合 [例: 排入院會 (交內政委員會)]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案類別'
+          in: 'query'
+          description: '議案類別 [例: 法律案]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案人'
+          in: 'query'
+          description: '提案人 [例: 徐欣瑩]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '連署人'
+          in: 'query'
+          description: '連署人 [例: 林德福]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '法律編號'
+          in: 'query'
+          description: '議案相關的法律編號(?) [例: 01254]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案狀態'
+          in: 'query'
+          description: '議案目前所處狀態 [例: 交付審查]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會議代碼'
+          in: 'query'
+          description: '會議代碼 [例: 院會-11-2-3]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案來源'
+          in: 'query'
+          description: '議案的提案來源屬性 [例: 委員提案] (TODO: enum)'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案編號'
+          in: 'query'
+          description: '議案編號 [例: 202110068550000]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案編號'
+          in: 'query'
+          description: '議案的提案編號 [例: 20委11006855]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '字號'
+          in: 'query'
+          description: '議案的字號 [例: 院總第20號委員提案第11001661號]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '法律相關議案資料'
+        404:
+          description: '找不到法律相關議案資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /laws/{id}/versions:
+    get:
+      tags:
+        - Law
+      summary: '取得法律過往的版本紀錄列表'
+      operationId: 'getLawVersions'
+      parameters:
+        -
+          name: 'id'
+          description: '法律編號'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '09200015'
+        -
+          name: '法律編號'
+          in: 'query'
+          description: '法律編號 [例: 90481]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '版本編號'
+          in: 'query'
+          description: '版本編號 [例: 90481:1944-02-29-制定]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '日期'
+          in: 'query'
+          description: '日期 [例: 1944-02-29]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '動作'
+          in: 'query'
+          description: '動作 [例: 制定]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '歷程.主提案'
+          in: 'query'
+          description: '歷程.主提案 [例: 張子揚]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '歷程.進度'
+          in: 'query'
+          description: '歷程.進度 [例: 一讀]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '現行版本'
+          in: 'query'
+          description: '現行版本'
+          required: false
+          schema:
+            type: 'string'
+            enum:
+              - 現行
+              - 非現行
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '法律過往的版本紀錄資料'
+        404:
+          description: '找不到法律過往的版本紀錄資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /law_contents:
     get:
       tags:
@@ -892,6 +1437,91 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /law_versions/{id}/contents:
+    get:
+      tags:
+        - Law
+      summary: '取得法律版本包含的法條列表'
+      operationId: 'getLawVersionContents'
+      parameters:
+        -
+          name: 'id'
+          description: '版本編號'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '90481:1944-02-29-制定'
+        -
+          name: '法律編號'
+          in: 'query'
+          description: '法律編號 [例: 90481]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '版本編號'
+          in: 'query'
+          description: '版本編號 [例: 90481:90481:1944-02-29-制定:1]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '順序'
+          in: 'query'
+          description: '順序 [例: 1]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '條號'
+          in: 'query'
+          description: '條號 [例: 第一條]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '現行版'
+          in: 'query'
+          description: '現行版'
+          required: false
+          schema:
+            type: 'string'
+            enum:
+              - 現行
+              - 非現行
+        -
+          name: '版本追蹤'
+          in: 'query'
+          description: '版本追蹤 [例: new]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '法律版本包含的法條資料'
+        404:
+          description: '找不到法律版本包含的法條資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /legislators:
     get:
       tags:
@@ -952,7 +1582,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /legislators/{term}-{name}:
+  /legislators/{term}/{name}:
     get:
       tags:
         - Legislator
@@ -980,6 +1610,471 @@ paths:
           description: '立法委員資料'
         404:
           description: '找不到立法委員資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /legislators/{term}/{name}/propose_bills:
+    get:
+      tags:
+        - Legislator
+      summary: '取得委員為提案人的法案列表'
+      operationId: 'getLegislatorProposeBills'
+      parameters:
+        -
+          name: 'term'
+          description: '屆'
+          in: 'path'
+          required: true
+          schema:
+            type: 'integer'
+          example: 11
+        -
+          name: 'name'
+          description: '委員姓名'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '韓國瑜'
+        -
+          name: '屆'
+          in: 'query'
+          description: '議案所屬屆期 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會期'
+          in: 'query'
+          description: '議案所屬會期 [例: 2]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '議案流程.狀態'
+          in: 'query'
+          description: '議案流程中曾經有過狀態，字串需完全符合 [例: 排入院會 (交內政委員會)]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案類別'
+          in: 'query'
+          description: '議案類別 [例: 法律案]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案人'
+          in: 'query'
+          description: '提案人 [例: 徐欣瑩]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '連署人'
+          in: 'query'
+          description: '連署人 [例: 林德福]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '法律編號'
+          in: 'query'
+          description: '議案相關的法律編號(?) [例: 01254]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案狀態'
+          in: 'query'
+          description: '議案目前所處狀態 [例: 交付審查]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會議代碼'
+          in: 'query'
+          description: '會議代碼 [例: 院會-11-2-3]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案來源'
+          in: 'query'
+          description: '議案的提案來源屬性 [例: 委員提案] (TODO: enum)'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案編號'
+          in: 'query'
+          description: '議案編號 [例: 202110068550000]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案編號'
+          in: 'query'
+          description: '議案的提案編號 [例: 20委11006855]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '字號'
+          in: 'query'
+          description: '議案的字號 [例: 院總第20號委員提案第11001661號]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '委員為提案人的法案資料'
+        404:
+          description: '找不到委員為提案人的法案資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /legislators/{term}/{name}/cosign_bills:
+    get:
+      tags:
+        - Legislator
+      summary: '取得委員為連署人的法案列表'
+      operationId: 'getLegislatorCosignBills'
+      parameters:
+        -
+          name: 'term'
+          description: '屆'
+          in: 'path'
+          required: true
+          schema:
+            type: 'integer'
+          example: 11
+        -
+          name: 'name'
+          description: '委員姓名'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '韓國瑜'
+        -
+          name: '屆'
+          in: 'query'
+          description: '議案所屬屆期 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會期'
+          in: 'query'
+          description: '議案所屬會期 [例: 2]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '議案流程.狀態'
+          in: 'query'
+          description: '議案流程中曾經有過狀態，字串需完全符合 [例: 排入院會 (交內政委員會)]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案類別'
+          in: 'query'
+          description: '議案類別 [例: 法律案]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案人'
+          in: 'query'
+          description: '提案人 [例: 徐欣瑩]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '連署人'
+          in: 'query'
+          description: '連署人 [例: 林德福]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '法律編號'
+          in: 'query'
+          description: '議案相關的法律編號(?) [例: 01254]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案狀態'
+          in: 'query'
+          description: '議案目前所處狀態 [例: 交付審查]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會議代碼'
+          in: 'query'
+          description: '會議代碼 [例: 院會-11-2-3]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案來源'
+          in: 'query'
+          description: '議案的提案來源屬性 [例: 委員提案] (TODO: enum)'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案編號'
+          in: 'query'
+          description: '議案編號 [例: 202110068550000]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案編號'
+          in: 'query'
+          description: '議案的提案編號 [例: 20委11006855]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '字號'
+          in: 'query'
+          description: '議案的字號 [例: 院總第20號委員提案第11001661號]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '委員為連署人的法案資料'
+        404:
+          description: '找不到委員為連署人的法案資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /legislators/{term}/{name}/meets:
+    get:
+      tags:
+        - Legislator
+      summary: '取得委員出席的會議列表'
+      operationId: 'getLegislatorMeets'
+      parameters:
+        -
+          name: 'term'
+          description: '屆'
+          in: 'path'
+          required: true
+          schema:
+            type: 'integer'
+          example: 11
+        -
+          name: 'name'
+          description: '委員姓名'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '韓國瑜'
+        -
+          name: '屆'
+          in: 'query'
+          description: '屆 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議代碼'
+          in: 'query'
+          description: '會議代碼 [例: 院會-11-2-6]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會期'
+          in: 'query'
+          description: '會期 [例: 2]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議種類'
+          in: 'query'
+          description: '會議種類 [例: 院會] (TODO: enum)'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會議資料.出席委員'
+          in: 'query'
+          description: '會議資料.出席委員 [例: 陳秀寳]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '日期'
+          in: 'query'
+          description: '日期 [例: 2024-10-25]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '委員會代號'
+          in: 'query'
+          description: '委員會代號 [例: 23]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議資料.會議編號'
+          in: 'query'
+          description: '會議資料.會議編號 [例: 2024102368]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議事網資料.關係文書.議案.議案編號'
+          in: 'query'
+          description: '議事網資料.關係文書.議案.議案編號 [例: 202110071090000]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '委員出席的會議資料'
+        404:
+          description: '找不到委員出席的會議資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /legislators/{term}/{name}/interpellations:
+    get:
+      tags:
+        - Legislator
+      summary: '取得委員為質詢委員的質詢列表'
+      operationId: 'getLegislatorInterpellations'
+      parameters:
+        -
+          name: 'term'
+          description: '屆'
+          in: 'path'
+          required: true
+          schema:
+            type: 'integer'
+          example: 11
+        -
+          name: 'name'
+          description: '委員姓名'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '韓國瑜'
+        -
+          name: '質詢委員'
+          in: 'query'
+          description: '質詢委員 [例: 羅智強]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '屆'
+          in: 'query'
+          description: '屆 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會期'
+          in: 'query'
+          description: '會期 [例: 2]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議代碼'
+          in: 'query'
+          description: '會議代碼 [例: 院會-11-2-6]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '委員為質詢委員的質詢資料'
+        404:
+          description: '找不到委員為質詢委員的質詢資料'
           content:
             application/json:
               schema:
@@ -1099,6 +2194,304 @@ paths:
           description: '會議資料'
         404:
           description: '找不到會議資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /meets/{id}/ivods:
+    get:
+      tags:
+        - Meet
+      summary: '取得會議相關的IVOD列表'
+      operationId: 'getMeetIvods'
+      parameters:
+        -
+          name: 'id'
+          description: '會議代碼'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '院會-11-2-3'
+        -
+          name: '屆'
+          in: 'query'
+          description: '屆 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會期'
+          in: 'query'
+          description: '會期 [例: 2]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議.會議代碼'
+          in: 'query'
+          description: '會議.會議代碼 [例: 委員會-11-2-22-5]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '委員名稱'
+          in: 'query'
+          description: '委員名稱 [例: 陳培瑜]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會議資料.委員會代碼'
+          in: 'query'
+          description: '會議資料.委員會代碼 [例: 22]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議資料.會議代碼'
+          in: 'query'
+          description: '會議資料.會議代碼 [例: 委員會-11-2-22-5]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '日期'
+          in: 'query'
+          description: '日期 [例: 2024-10-24]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '影片種類'
+          in: 'query'
+          description: '影片種類'
+          required: false
+          schema:
+            type: 'string'
+            enum:
+              - Clip
+              - Full
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '會議相關的IVOD資料'
+        404:
+          description: '找不到會議相關的IVOD資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /meets/{id}/bills:
+    get:
+      tags:
+        - Meet
+      summary: '取得會議內的議案列表'
+      operationId: 'getMeetBills'
+      parameters:
+        -
+          name: 'id'
+          description: '會議代碼'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '院會-11-2-3'
+        -
+          name: '屆'
+          in: 'query'
+          description: '議案所屬屆期 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會期'
+          in: 'query'
+          description: '議案所屬會期 [例: 2]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '議案流程.狀態'
+          in: 'query'
+          description: '議案流程中曾經有過狀態，字串需完全符合 [例: 排入院會 (交內政委員會)]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案類別'
+          in: 'query'
+          description: '議案類別 [例: 法律案]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案人'
+          in: 'query'
+          description: '提案人 [例: 徐欣瑩]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '連署人'
+          in: 'query'
+          description: '連署人 [例: 林德福]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '法律編號'
+          in: 'query'
+          description: '議案相關的法律編號(?) [例: 01254]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案狀態'
+          in: 'query'
+          description: '議案目前所處狀態 [例: 交付審查]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '會議代碼'
+          in: 'query'
+          description: '會議代碼 [例: 院會-11-2-3]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案來源'
+          in: 'query'
+          description: '議案的提案來源屬性 [例: 委員提案] (TODO: enum)'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '議案編號'
+          in: 'query'
+          description: '議案編號 [例: 202110068550000]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '提案編號'
+          in: 'query'
+          description: '議案的提案編號 [例: 20委11006855]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '字號'
+          in: 'query'
+          description: '議案的字號 [例: 院總第20號委員提案第11001661號]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '會議內的議案資料'
+        404:
+          description: '找不到會議內的議案資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /meets/{id}/interpellations:
+    get:
+      tags:
+        - Meet
+      summary: '取得會議內的質詢列表'
+      operationId: 'getMeetInterpellations'
+      parameters:
+        -
+          name: 'id'
+          description: '會議代碼'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+          example: '院會-11-2-3'
+        -
+          name: '質詢委員'
+          in: 'query'
+          description: '質詢委員 [例: 羅智強]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: '屆'
+          in: 'query'
+          description: '屆 [例: 11]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會期'
+          in: 'query'
+          description: '會期 [例: 2]'
+          required: false
+          schema:
+            type: 'integer'
+        -
+          name: '會議代碼'
+          in: 'query'
+          description: '會議代碼 [例: 院會-11-2-6]'
+          required: false
+          schema:
+            type: 'string'
+        -
+          name: 'page'
+          in: 'query'
+          description: '頁數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 1
+        -
+          name: 'per_page'
+          in: 'query'
+          description: '每頁筆數'
+          required: false
+          schema:
+            type: 'integer'
+          example: 20
+      responses:
+        200:
+          description: '會議內的質詢資料'
+        404:
+          description: '找不到會議內的質詢資料'
           content:
             application/json:
               schema:

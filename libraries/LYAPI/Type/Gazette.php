@@ -64,6 +64,7 @@ class LYAPI_Type_Gazette extends LYAPI_Type
                 'map' => [
                     '公報編號' => '公報編號',
                 ],
+                'subject' => '公報所含的公報目錄',
             ],
         ];
     }

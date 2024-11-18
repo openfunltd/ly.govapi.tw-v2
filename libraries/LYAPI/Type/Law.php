@@ -90,12 +90,14 @@ class LYAPI_Type_Law extends LYAPI_Type
                 'map' => [
                     '法律編號' => '法律編號',
                 ],
+                'subject' => '法律相關議案',
             ],
             'versions' => [
                 'type' => 'law_version',
                 'map' => [
                     '法律編號' => '法律編號',
                 ],
+                'subject' => '法律過往的版本紀錄',
             ],
         ];
     }

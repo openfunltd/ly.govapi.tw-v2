@@ -79,6 +79,7 @@ class LYAPI_Type_Committee extends LYAPI_Type
                 'map' => [
                     '委員會代號' => '委員會代號',
                 ],
+                'subject' => '委員會相關會議',
             ],
         ];
     }

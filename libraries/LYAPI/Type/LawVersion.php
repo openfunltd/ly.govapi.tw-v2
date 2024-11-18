@@ -102,6 +102,7 @@ class LYAPI_Type_LawVersion extends LYAPI_Type
                 'map' => [
                     '版本編號' => '版本編號',
                 ],
+                'subject' => '法律版本包含的法條',
             ],
         ];
     }

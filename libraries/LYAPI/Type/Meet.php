@@ -155,18 +155,21 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 'map' => [
                     '會議代碼' => '會議.會議代碼',
                 ],
+                'subject' => '會議相關的IVOD',
             ],
             'bills' => [
                 'type' => 'bill',
                 'map' => [
                     '會議代碼' => '會議代碼',
                 ],
+                'subject' => '會議內的議案',
             ],
             'interpellations' => [
                 'type' => 'interpellation',
                 'map' => [
                     '會議代碼' => '會議代碼',
                 ],
+                'subject' => '會議內的質詢',
             ],
         ];
     }

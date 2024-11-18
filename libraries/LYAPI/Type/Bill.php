@@ -97,7 +97,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
             '議案編號' => [
                 'path_name' => 'billNo',
                 'type' => 'string',
-                'example' => '1111102070100100',
+                'example' => '203110077970000',
             ],
         ];
     }
@@ -155,16 +155,19 @@ class LYAPI_Type_Bill extends LYAPI_Type
             'related_bills' => [
                 'type' => '_function',
                 'function' => 'getRelatedBills',
+                'subject' => '相關議案',
             ],
             'doc_html' => [
                 'type' => '_function',
                 'function' => 'getDocHTML',
+                'subject' => '議案文件 HTML 內容',
             ],
             'meets' => [
                 'type' => 'meet',
                 'map' => [
                     '議案編號' => '議事網資料.關係文書.議案.議案編號',
                 ],
+                'subject' => '議案相關會議',
             ],
         ];
     }

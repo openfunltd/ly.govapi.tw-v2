@@ -63,6 +63,7 @@ class LYAPI_Type_Legislator extends LYAPI_Type
                     '屆' => '屆',
                     '委員姓名' => '提案人',
                 ],
+                'subject' => '委員為提案人的法案',
             ],
             'cosign_bills' => [
                 'type' => 'bill',
@@ -70,6 +71,7 @@ class LYAPI_Type_Legislator extends LYAPI_Type
                     '屆' => '屆',
                     '委員姓名' => '連署人',
                 ],
+                'subject' => '委員為連署人的法案',
             ],
             'meets' => [
                 'type' => 'meet',
@@ -77,6 +79,7 @@ class LYAPI_Type_Legislator extends LYAPI_Type
                     '屆' => '屆',
                     '委員姓名' => '會議資料.出席立委',
                 ],
+                'subject' => '委員出席的會議',
             ],
             'interpellations' => [
                 'type' => 'interpellation',
@@ -84,6 +87,7 @@ class LYAPI_Type_Legislator extends LYAPI_Type
                     '屆' => '屆',
                     '委員姓名' => '質詢委員',
                 ],
+                'subject' => '委員為質詢委員的質詢',
             ],
         ];
     }
