@@ -2,6 +2,62 @@
 
 class LYAPI_Type_Meet extends LYAPI_Type
 {
+    public static function getTypeSubject()
+    {
+        return '會議';
+    }
+
+    public static function getFilterFieldsInfo(): array
+    {
+        return [
+            '屆' => [
+                'es_field' => '',
+                'description' => '屆 [例: 11]',
+                'type' => 'integer',
+            ],
+            '會議代碼' => [
+                'es_field' => 'meet_id.keyword',
+                'description' => '會議代碼 [例: 院會-11-2-6]',
+                'type' => 'string',
+            ],
+            '會期' => [
+                'es_field' => '',
+                'description' => '會期 [例: 2]',
+                'type' => 'integer',
+            ],
+            '會議種類' => [
+                'es_field' => 'meet_type.keyword',
+                'description' => '會議種類 [例: 院會] (TODO: enum)',
+                'type' => 'string',
+            ],
+            '會議資料.出席委員' => [
+                'es_field' => 'meet_data.attendLegislator.keyword',
+                'description' => '會議資料.出席委員 [例: 陳秀寳]',
+                'type' => 'string',
+            ],
+            '日期' => [
+                'es_field' => '',
+                'description' => '日期 [例: 2024-10-25]',
+                'type' => 'string',
+            ],
+            '委員會代號' => [
+                'es_field' => '',
+                'description' => '委員會代號 [例: 23]',
+                'type' => 'integer',
+            ],
+            '會議資料.會議編號' => [
+                'es_field' => 'meet_data.meetingNo.keyword',
+                'description' => '會議資料.會議編號 [例: 2024102368]',
+                'type' => 'string',
+            ],
+            '議事網資料.關係文書.議案.議案編號' => [
+                'es_field' => 'ppg_data.關係文書.bills.billNo.keyword',
+                'description' => '議事網資料.關係文書.議案.議案編號 [例: 202110071090000]',
+                'type' => 'string',
+            ],
+        ];
+    }
+
     public static function getFieldMap()
     {
         return [
@@ -55,23 +111,14 @@ class LYAPI_Type_Meet extends LYAPI_Type
         ];
     }
 
-    public static function getIdFields()
-    {
-        return ['會議代碼'];
-    }
-
-    public static function filterFields()
+    public static function getIdFieldsInfo()
     {
         return [
-            '屆' => '',
-            '會議代碼' => 'meet_id.keyword',
-            '會期' => '',
-            '會議種類' => 'meet_type.keyword',
-            '會議資料.出席委員' => 'meet_data.attendLegislator.keyword',
-            '日期' => '',
-            '委員會代號' => '',
-            '會議資料.會議編號' => 'meet_data.meetingNo.keyword',
-            '議事網資料.關係文書.議案.議案編號' => 'ppg_data.關係文書.bills.billNo.keyword',
+            '會議代碼' => [
+                'path_name' => 'id',
+                'type' => 'string',
+                'example' => '院會-11-2-3',
+            ],
         ];
     }
 

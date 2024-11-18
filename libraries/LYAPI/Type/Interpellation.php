@@ -2,6 +2,37 @@
 
 class LYAPI_Type_Interpellation extends LYAPI_Type
 {
+    public static function getTypeSubject()
+    {
+        return '質詢';
+    }
+
+    public static function getFilterFieldsInfo(): array
+    {
+        return [
+            '質詢委員' => [
+                'es_field' => 'legislators.keyword',
+                'description' => '質詢委員 [例: 羅智強]',
+                'type' => 'string',
+            ],
+            '屆' => [
+                'es_field' => 'term',
+                'description' => '屆 [例: 11]',
+                'type' => 'integer',
+            ],
+            '會期' => [
+                'es_field' => 'sessionPeriod',
+                'description' => '會期 [例: 2]',
+                'type' => 'integer',
+            ],
+            '會議代碼' => [
+                'es_field' => 'meet_id.keyword',
+                'description' => '會議代碼 [例: 院會-11-2-6]',
+                'type' => 'string',
+            ],
+        ];
+    }
+
     public static function getFieldMap()
     {
         return [
@@ -21,18 +52,14 @@ class LYAPI_Type_Interpellation extends LYAPI_Type
         ];
     }
 
-    public static function getIdFields()
-    {
-        return ['質詢編號'];
-    }
-
-    public static function filterFields()
+    public static function getIdFieldsInfo()
     {
         return [
-            '質詢委員' => 'legislators.keyword',
-            '屆' => '',
-            '會期' => 'sessionPeriod',
-            '會議代碼' => 'meet_id.keyword',
+            '質詢編號' => [
+                'path_name' => 'id',
+                'type' => 'string',
+                'example' => '11-1-1-1',
+            ],
         ];
     }
 

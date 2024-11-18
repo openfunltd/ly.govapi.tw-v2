@@ -2,6 +2,58 @@
 
 class LYAPI_Type_Ivod extends LYAPI_Type
 {
+    public static function getTypeSubject()
+    {
+        return 'IVOD';
+    }
+
+    public static function getFilterFieldsInfo(): array
+    {
+        return [
+            '屆' => [
+                'es_field' => 'meet.term',
+                'description' => '屆 [例: 11]',
+                'type' => 'integer',
+            ],
+            '會期' => [
+                'es_field' => 'meet.sessionPeriod',
+                'description' => '會期 [例: 2]',
+                'type' => 'integer',
+            ],
+            '會議.會議代碼' => [
+                'es_field' => 'meet.id.keyword',
+                'description' => '會議.會議代碼 [例: 委員會-11-2-22-5]',
+                'type' => 'string',
+            ],
+            '委員名稱' => [
+                'es_field' => '委員名稱.keyword',
+                'description' => '委員名稱 [例: 陳培瑜]',
+                'type' => 'string',
+            ],
+            '會議資料.委員會代碼' => [
+                'es_field' => '',
+                'description' => '會議資料.委員會代碼 [例: 22]',
+                'type' => 'integer',
+            ],
+            '會議資料.會議代碼' => [
+                'es_field' => 'meet.id.keyword',
+                'description' => '會議資料.會議代碼 [例: 委員會-11-2-22-5]',
+                'type' => 'string',
+            ],
+            '日期' => [
+                'es_field' => '',
+                'description' => '日期 [例: 2024-10-24]',
+                'type' => 'string',
+            ],
+            '影片種類' => [
+                'es_field' => 'type.keyword',
+                'description' => '影片種類',
+                'type' => 'string',
+                'enum' => ['Clip', 'Full'],
+            ],
+        ];
+    }
+
     public static function getFieldMap()
     {
         return [
@@ -25,22 +77,14 @@ class LYAPI_Type_Ivod extends LYAPI_Type
         ];
     }
 
-    public static function getIdFields()
-    {
-        return ['IVOD_ID'];
-    }
-
-    public static function filterFields()
+    public static function getIdFieldsInfo()
     {
         return [
-            '屆' => 'meet.term',
-            '會期' => 'meet.sessionPeriod',
-            '會議.會議代碼' => 'meet.id.keyword',
-            '委員名稱' => '委員名稱.keyword',
-            '會議資料.委員會代碼' => '',
-            '會議資料.會議代碼' => 'meet.id.keyword',
-            '日期' => '',
-            '影片種類' => 'type.keyword',
+            'IVOD_ID' => [
+                'path_name' => 'id',
+                'type' => 'string',
+                'example' => '156045',
+            ],
         ];
     }
 

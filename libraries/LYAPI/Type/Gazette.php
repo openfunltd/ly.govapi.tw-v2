@@ -2,6 +2,27 @@
 
 class LYAPI_Type_Gazette extends LYAPI_Type
 {
+    public static function getTypeSubject()
+    {
+        return '公報';
+    }
+
+    public static function getFilterFieldsInfo(): array
+    {
+        return [
+            '公報編號' => [
+                'es_field' => '',
+                'description' => '公報編號 [例: 1137701]',
+                'type' => 'string',
+            ],
+            '卷' => [
+                'es_field' => '',
+                'description' => '卷 [例: 113]',
+                'type' => 'integer',
+            ],
+        ];
+    }
+
     public static function getFieldMap()
     {
         // https://data.ly.gov.tw/getds.action?id=41
@@ -15,16 +36,14 @@ class LYAPI_Type_Gazette extends LYAPI_Type
         ];
     }
 
-    public static function getIdFields()
-    {
-        return ['公報編號'];
-    }
-
-    public static function filterFields()
+    public static function getIdFieldsInfo()
     {
         return [
-            '公報編號' => '',
-            '卷' => '',
+            '公報編號' => [
+                'path_name' => 'id',
+                'type' => 'string',
+                'example' => '1137701',
+            ],
         ];
     }
 

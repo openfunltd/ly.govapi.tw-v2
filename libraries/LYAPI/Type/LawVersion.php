@@ -2,6 +2,16 @@
 
 class LYAPI_Type_LawVersion extends LYAPI_Type
 {
+    public static function getEnpointGroup()
+    {
+        return 'Law';
+    }
+
+    public static function getTypeSubject()
+    {
+        return '法律版本';
+    }
+
     public static function getFieldMap()
     {
         // https://data.ly.gov.tw/
@@ -16,16 +26,56 @@ class LYAPI_Type_LawVersion extends LYAPI_Type
         ];
     }
 
-    public static function filterFields()
+    public static function getFilterFieldsInfo(): array
     {
         return [
-            '法律編號' => 'law_id.keyword',
-            '版本編號' => 'version_id.keyword',
-            '日期' => 'date',
-            '動作' => 'action.keyword',
-            '歷程.主提案' => 'history.主提案.keyword',
-            '歷程.進度' => 'history.進度.keyword',
-            '現行版本' => 'current.keyword',
+            '法律編號' => [
+                'es_field' => 'law_id.keyword',
+                'description' => '法律編號 [例: 90481]',
+                'type' => 'string',
+            ],
+            '版本編號' => [
+                'es_field' => 'version_id.keyword',
+                'description' => '版本編號 [例: 90481:1944-02-29-制定]',
+                'type' => 'string',
+            ],
+            '日期' => [
+                'es_field' => 'date',
+                'description' => '日期 [例: 1944-02-29]',
+                'type' => 'string',
+            ],
+            '動作' => [
+                'es_field' => 'action.keyword',
+                'description' => '動作 [例: 制定]',
+                'type' => 'string',
+            ],
+            '歷程.主提案' => [
+                'es_field' => 'history.主提案.keyword',
+                'description' => '歷程.主提案 [例: 張子揚]',
+                'type' => 'string',
+            ],
+            '歷程.進度' => [
+                'es_field' => 'history.進度.keyword',
+                'description' => '歷程.進度 [例: 一讀]',
+                'type' => 'string',
+            ],
+            '現行版本' => [
+                'es_field' => 'current.keyword',
+                'description' => '現行版本',
+                'type' => 'string',
+                'enum' => ['現行', '非現行'],
+            ],
+        ];
+    }
+
+    public static function getIdFieldsInfo()
+    {
+        return [
+            '版本編號' => [
+                'path_name' => 'id',
+                'type' => 'string',
+                'example' => '90481:1944-02-29-制定',
+            ],
         ];
     }
 

@@ -2,9 +2,51 @@
 
 class LYAPI_Type_Legislator extends LYAPI_Type
 {
-    public static function getIdFields()
+    public static function getTypeSubject()
     {
-        return ['屆', '委員姓名'];
+        return '立法委員';
+    }
+
+    public static function getFilterFieldsInfo(): array
+    {
+        return [
+            '屆' => [
+                'es_field' => '',
+                'description' => '屆 [例: 11]',
+                'type' => 'integer',
+            ],
+            '黨籍' => [
+                'es_field' => 'party.keyword',
+                'description' => '黨籍 [例: 民主進步黨]',
+                'type' => 'string',
+            ],
+            '選區名稱' => [
+                'es_field' => 'areaName.keyword',
+                'description' => '選區名稱 [例: 臺南市第6選舉區]',
+                'type' => 'string',
+            ],
+            '歷屆立法委員編號' => [
+                'es_field' => '',
+                'description' => '歷屆立法委員編號 [例: 1160]',
+                'type' => 'integer',
+            ],
+        ];
+    }
+
+    public static function getIdFieldsInfo()
+    {
+        return [
+            '屆' => [
+                'path_name' => 'term',
+                'type' => 'integer',
+                'example' => 11,
+            ],
+            '委員姓名' => [
+                'path_name' => 'name',
+                'type' => 'string',
+                'example' => '韓國瑜',
+            ],
+        ];
     }
 
     public static function defaultLimit()
@@ -45,17 +87,6 @@ class LYAPI_Type_Legislator extends LYAPI_Type
             ],
         ];
     }
-
-    public static function filterFields()
-    {
-        return [
-            '屆' => '',
-            '黨籍' => 'party.keyword',
-            '選區名稱' => 'areaName.keyword',
-            '歷屆立法委員編號' => '',
-        ];
-    }
-
 
     public static function getFieldMap()
     {

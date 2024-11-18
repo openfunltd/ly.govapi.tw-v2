@@ -2,6 +2,42 @@
 
 class LYAPI_Type_GazetteAgenda extends LYAPI_Type
 {
+    public static function getEnpointGroup()
+    {
+        return 'Gazette';
+    }
+
+    public static function getTypeSubject()
+    {
+        return '公報目錄';
+    }
+
+    public static function getFilterFieldsInfo(): array
+    {
+        return [
+            '公報編號' => [
+                'es_field' => '',
+                'description' => '公報編號 [例: 1137701]',
+                'type' => 'string',
+            ],
+            '卷' => [
+                'es_field' => '',
+                'description' => '卷 [例: 113]',
+                'type' => 'integer',
+            ],
+            '屆' => [
+                'es_field' => '',
+                'description' => '屆 [例: 11]',
+                'type' => 'integer',
+            ],
+            '會議日期' => [
+                'es_field' => '',
+                'description' => '會議日期 [例: 2024-10-04]',
+                'type' => 'string',
+            ],
+        ];
+    }
+
     public static function getFieldMap()
     {
         // https://data.ly.gov.tw/getds.action?id=41
@@ -27,18 +63,14 @@ class LYAPI_Type_GazetteAgenda extends LYAPI_Type
         ];
     }
 
-    public static function getIdFields()
-    {
-        return ['公報議程編號'];
-    }
-
-    public static function filterFields()
+    public static function getIdFieldsInfo()
     {
         return [
-            '公報編號' => '',
-            '卷' => '',
-            '屆' => '',
-            '會議日期' => '',
+            '公報議程編號' => [
+                'path_name' => 'id',
+                'type' => 'string',
+                'example' => '1137701_00001',
+            ],
         ];
     }
 

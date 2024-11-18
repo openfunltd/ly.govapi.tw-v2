@@ -2,6 +2,27 @@
 
 class LYAPI_Type_Committee extends LYAPI_Type
 {
+    public static function getTypeSubject()
+    {
+        return '委員會';
+    }
+
+    public static function getFilterFieldsInfo(): array
+    {
+        return [
+            '委員會類別' => [
+                'es_field' => 'comtType.keyword',
+                'description' => '委員會類別 [例: 常設委員會]',
+                'type' => 'string',
+            ],
+            '委員會代號' => [
+                'es_field' => 'comtCd.keyword',
+                'description' => '委員會代號 [例: 15]',
+                'type' => 'integer',
+            ],
+        ];
+    }
+
     public static function getFieldMap()
     {
         // https://data.ly.gov.tw/getds.action?id=14
@@ -14,9 +35,15 @@ class LYAPI_Type_Committee extends LYAPI_Type
         ];
     }
 
-    public static function getIdFields()
+    public static function getIdFieldsInfo()
     {
-        return ['委員會代號'];
+        return [
+            '委員會代號' => [
+                'path_name' => 'comtCd',
+                'type' => 'string',
+                'example' => '15',
+            ],
+        ];
     }
 
     public static function aggMap()

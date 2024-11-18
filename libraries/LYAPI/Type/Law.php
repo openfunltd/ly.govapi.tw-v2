@@ -2,6 +2,48 @@
 
 class LYAPI_Type_Law extends LYAPI_Type
 {
+    public static function getTypeSubject()
+    {
+        return '法律';
+    }
+
+    public static function getFilterFieldsInfo(): array
+    {
+        return [
+            '法律編號' => [
+                'es_field' => 'id.keyword',
+                'description' => '法律編號 [例: 09200015]',
+                'type' => 'string',
+            ],
+            '類別' => [
+                'es_field' => 'type.keyword',
+                'description' => '類別',
+                'type' => 'string',
+                'enum' => ['母法', '子法'],
+            ],
+            '母法編號' => [
+                'es_field' => 'parent.keyword',
+                'description' => '母法編號 [例: 09200]',
+                'type' => 'string',
+            ],
+            '法律狀態' => [
+                'es_field' => 'status.keyword',
+                'description' => '法律狀態 [例: 現行]',
+                'type' => 'string',
+            ],
+            '主管機關' => [
+                'es_field' => 'categories.keyword',
+                'description' => '主管機關 [例: 總統府]',
+                'type' => 'string',
+            ],
+            '最新版本.日期' => [
+                'es_field' => 'latest_version.date',
+                'description' => '最新版本日期 [例: 2024-10-25]',
+                'type' => 'string',
+            ],
+        ];
+    }
+
     public static function getFieldMap()
     {
         // https://data.ly.gov.tw/
@@ -21,20 +63,14 @@ class LYAPI_Type_Law extends LYAPI_Type
         ];
     }
 
-    public static function getIdFields()
-    {
-        return ['法律編號'];
-    }
-
-    public static function filterFields()
+    public static function getIdFieldsInfo()
     {
         return [
-            '法律編號' => 'id.keyword',
-            '類別' => 'type.keyword',
-            '母法編號' => 'parent.keyword',
-            '法律狀態' => 'status.keyword',
-            '主管機關' => 'categories.keyword',
-            '最新版本.日期' => 'latest_version.date',
+            '法律編號' => [
+                'path_name' => 'id',
+                'type' => 'string',
+                'example' => '09200015',
+            ],
         ];
     }
 

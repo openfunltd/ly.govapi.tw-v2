@@ -3,6 +3,14 @@
 class LYAPI_Type
 {
     /**
+     * 取得所有的 endpoint type，有列出的才會被產生 swagger
+     */
+    public static function getEndpointTypes()
+    {
+        return ['list', 'item'];
+    }
+
+    /**
      * run 依照 $type 執行對應的 $method，Ex: LYAPI_Type::run('user', 'get', [1]) => LYAPI_Type_User::get(1)
      */
     public static function run($type, $method, $args = [])
@@ -15,6 +23,37 @@ class LYAPI_Type
     }
 
     /**
+     * 取得 $type 的中文名稱
+     */
+    public static function getTypeSubject()
+    {
+        return '';
+    }
+
+
+    /**
+     * 取得 filter 參數的欄位資訊，包含 es_field, description, type, enum 等等
+     */
+    public static function getFilterFieldsInfo(): array
+    {
+        return [
+            /* 例:
+            '屆' => [
+                'es_field' => '',
+                'description' => '議案所屬屆期 [例: 11]',
+                'type' => 'integer',
+            ],
+            '影片種類' => [
+                'es_field' => '',
+                'description' => '影片種類',
+                'type' => 'string',
+                'enum' => ['Clip', 'Full'],
+            ],
+            */
+        ];
+    }
+
+    /**
      * 回傳 collection api 時，存放資料的 key，預設為 User => users
      */
     public static function getReturnKey()
@@ -23,11 +62,27 @@ class LYAPI_Type
     }
 
     /**
+     * 回傳 ID 欄位的資訊，包含 type, example 等等
+     */
+    public static function getIdFieldsInfo()
+    {
+        return [
+            /* 例:
+            '議案編號' => [
+                'path_name' => 'id',  // 顯示在文件中 path 參數的名稱，不支援中文
+                'type' => 'string',
+                'example' => '1111102070100100',
+            ],
+             */
+        ];
+    }
+
+    /**
      * 回傳預設的 ID 欄位，可指定多筆，例如 legislator 為 ["屆","姓名"]
      */
     public static function getIdFields()
     {
-        return ['_id'];
+        return array_keys(static::getIdFieldsInfo());
     }
 
     /**
@@ -43,7 +98,11 @@ class LYAPI_Type
      */
     public static function filterFields()
     {
-        return [];
+        $fields = [];
+        foreach (static::getFilterFieldsInfo() as $field => $info) {
+            $fields[$field] = $info['es_field'];
+        }
+        return $fields;
     }
 
     /**

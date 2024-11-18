@@ -2,6 +2,82 @@
 
 class LYAPI_Type_Bill extends LYAPI_Type
 {
+    public static function getTypeSubject()
+    {
+        return '議案';
+    }
+
+    public static function getFilterFieldsInfo(): array
+    {
+        return [
+            '屆' => [
+                'es_field' => '',
+                'description' => '議案所屬屆期 [例: 11]',
+                'type' => 'integer',
+            ],
+            '會期' => [
+                'es_field' => '',
+                'description' => '議案所屬會期 [例: 2]',
+                'type' => 'integer',
+            ],
+            '議案流程.狀態' => [
+                'es_field' => '議案流程.狀態.keyword',
+                'description' => '議案流程中曾經有過狀態，字串需完全符合 [例: 排入院會 (交內政委員會)]',
+                'type' => 'string',
+            ],
+            '議案類別' => [
+                'es_field' => '議案類別.keyword',
+                'description' => '議案類別 [例: 法律案]',
+                'type' => 'string',
+            ],
+            '提案人' => [
+                'es_field' => '提案人.keyword',
+                'description' => '提案人 [例: 徐欣瑩]',
+                'type' => 'string',
+            ],
+            '連署人' => [
+                'es_field' => '連署人.keyword',
+                'description' => '連署人 [例: 林德福]',
+                'type' => 'string',
+            ],
+            '法律編號' => [
+                'es_field' => 'laws.keyword',
+                'description' => '議案相關的法律編號(?) [例: 01254]',
+                'type' => 'string',
+            ],
+            '議案狀態' => [
+                'es_field' => '議案狀態.keyword',
+                'description' => '議案目前所處狀態 [例: 交付審查]',
+                'type' => 'string',
+            ],
+            '會議代碼' => [
+                'es_field' => 'meet_id.keyword',
+                'description' => '會議代碼 [例: 院會-11-2-3]',
+                'type' => 'string',
+            ],
+            '提案來源' => [
+                'es_field' => '提案來源.keyword',
+                'description' => '議案的提案來源屬性 [例: 委員提案] (TODO: enum)',
+                'type' => 'string',
+            ],
+            '議案編號' => [
+                'es_field' => 'billNo.keyword',
+                'description' => '議案編號 [例: 202110068550000]',
+                'type' => 'string',
+            ],
+            '提案編號' => [
+                'es_field' => '提案編號.keyword',
+                'description' => '議案的提案編號 [例: 20委11006855]',
+                'type' => 'string',
+            ],
+            '字號' => [
+                'es_field' => '字號.keyword',
+                'description' => '議案的字號 [例: 院總第20號委員提案第11001661號]',
+                'type' => 'string',
+            ],
+        ];
+    }
+
     public static function getFieldMap()
     {
         return [
@@ -15,27 +91,14 @@ class LYAPI_Type_Bill extends LYAPI_Type
         ];
     }
 
-    public static function getIdFields()
-    {
-        return ['議案編號'];
-    }
-
-    public static function filterFields()
+    public static function getIdFieldsInfo()
     {
         return [
-            '屆' => '',
-            '會期' => '',
-            '議案流程.狀態' => '議案流程.狀態.keyword',
-            '議案類別' => '議案類別.keyword',
-            '提案人' => '提案人.keyword',
-            '連署人' => '連署人.keyword',
-            '法律編號' => 'laws.keyword',
-            '議案狀態' => '議案狀態.keyword',
-            '會議代碼' => 'meet_id.keyword',
-            '提案來源' => '提案來源.keyword',
-            '議案編號' => 'billNo.keyword',
-            '提案編號' => '提案編號.keyword',
-            '字號' => '字號.keyword',
+            '議案編號' => [
+                'path_name' => 'billNo',
+                'type' => 'string',
+                'example' => '1111102070100100',
+            ],
         ];
     }
 
