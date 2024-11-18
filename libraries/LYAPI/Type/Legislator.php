@@ -56,6 +56,7 @@ class LYAPI_Type_Legislator extends LYAPI_Type
 
     public static function getRelations()
     {
+        // FIXME: relation 的 "屆" 這個 filter 會被拿去當作 legislator 的 id
         return [
             'propose_bills' => [
                 'type' => 'bill',
