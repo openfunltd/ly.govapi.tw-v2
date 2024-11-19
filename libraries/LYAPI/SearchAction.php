@@ -258,6 +258,7 @@ class LYAPI_SearchAction
     public static function getItem($type, $ids, $sub, $query_string)
     {
         $id = implode('-', $ids);
+        $id = rawurlencode($id);
         $obj = Elastic::dbQuery("/{prefix}{$type}/_doc/{$id}", 'GET');
         if ($obj->found === false) {
             $records = new StdClass;
