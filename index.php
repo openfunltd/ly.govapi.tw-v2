@@ -6,6 +6,10 @@ MiniEngine::dispatch(function($uri){
         return ['index', 'robots'];
     }
 
+    if ($uri == '/swagger.yaml') {
+        return ['swagger', 'index'];
+    }
+
     if (preg_match('#^/gazette_agenda_doc/([0-9_]+)/([^/]+)$#', $uri, $matches)) {
         return ['gazette_agenda_doc', 'show', [$matches[1], $matches[2]]];
     }
