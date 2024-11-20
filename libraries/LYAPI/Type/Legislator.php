@@ -78,7 +78,7 @@ class LYAPI_Type_Legislator extends LYAPI_Type
                 'type' => 'meet',
                 'map' => [
                     '屆' => '屆',
-                    '委員姓名' => '會議資料.出席立委',
+                    '委員姓名' => '會議資料.出席委員',
                 ],
                 'subject' => '委員出席的會議',
             ],
