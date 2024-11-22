@@ -54,13 +54,13 @@ class LYAPI_Type_LawContent extends LYAPI_Type
                 'type' => 'string',
             ],
             '現行版' => [
-                'es_field' => 'current',
+                'es_field' => 'current.keyword',
                 'description' => '現行版',
                 'type' => 'string',
                 'enum' => ['現行', '非現行'],
             ],
             '版本追蹤' => [
-                'es_field' => 'version_trace',
+                'es_field' => 'version_trace.keyword',
                 'description' => '版本追蹤 [例: new]',
                 'type' => 'string',
             ],
