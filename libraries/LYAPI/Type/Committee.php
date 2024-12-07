@@ -67,7 +67,7 @@ class LYAPI_Type_Committee extends LYAPI_Type
     {
         return [
             '委員會類別' => 'comtType.keyword',
-            '委員會代號' => 'comtCd.keyword',
+            '委員會代號' => 'comtCd',
         ];
     }
 
