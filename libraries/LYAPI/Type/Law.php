@@ -54,6 +54,7 @@ class LYAPI_Type_Law extends LYAPI_Type
             'parent' => '母法編號',
             'name' => '名稱',
             'name_other' => '其他名稱',
+            'name_aka' => '別名',
             'categories' => '主管機關',
             'status' => '法律狀態',
             'latest_version' => '最新版本',
