@@ -75,6 +75,11 @@ class LYAPI_Type_Bill extends LYAPI_Type
                 'description' => '議案的字號 [例: 院總第20號委員提案第11001661號]',
                 'type' => 'string',
             ],
+            '法條編號' => [
+                'es_field' => '對照表.rows.law_content_id.keyword',
+                'description' => '對照表對應的法條編號 [例: 01945:01945:2015-01-22-全文修正:16]',
+                'type' => 'string',
+            ],
         ];
     }
 
