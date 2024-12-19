@@ -113,6 +113,9 @@ class LYAPI_Type_Legislator extends LYAPI_Type
             'leaveDate' => '離職日期',
             'leaveReason' => '離職原因',
             'bioId' => '歷屆立法委員編號',
+            'tel' => '電話',
+            'fax' => '傳真',
+            'addr' => '通訊處',
         ];
     }
 
