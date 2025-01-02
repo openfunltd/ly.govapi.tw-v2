@@ -144,13 +144,15 @@ class LYAPI_Type_Bill extends LYAPI_Type
             '字號',
             '提案編號',
             '法律編號',
+            '最新進度日期',
+            '提案人',
         ];
     }
 
     public static function sortFields()
     {
         return [
-            '資料抓取時間',
+            '最新進度日期',
         ];
     }
 
