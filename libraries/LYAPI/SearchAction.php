@@ -75,7 +75,11 @@ class LYAPI_SearchAction
 
         $filter_fields = LYAPI_Type::run($type, 'filterFields');
         $default_sort_fields = LYAPI_Type::run($type, 'sortFields');
-        $sort_fields = $default_sort_fields;
+        if (self::getParams('sort')) {
+            $sort_fields = self::getParams('sort');
+        } else {
+            $sort_fields = $default_sort_fields;
+        }
         if ($sort_fields) {
             $cmd->sort = new StdClass;
             foreach ($sort_fields as $field_name) {
