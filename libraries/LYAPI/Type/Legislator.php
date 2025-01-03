@@ -30,6 +30,11 @@ class LYAPI_Type_Legislator extends LYAPI_Type
                 'description' => '歷屆立法委員編號 [例: 1160]',
                 'type' => 'integer',
             ],
+            '委員姓名' => [
+                'es_field' => 'name.keyword',
+                'description' => '委員姓名 [例: 韓國瑜]',
+                'type' => 'string',
+            ],
         ];
     }
 
