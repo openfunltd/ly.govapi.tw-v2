@@ -124,6 +124,19 @@ class LYAPI_Type_Law extends LYAPI_Type
         $data['屆'] = $_GET['屆'] ?? 11;
         $data['歷程'] = [];
 
+        $skips = [];
+        $query_terms = [];
+        $query_terms[] = '法律編號=' . $data['法律編號'];
+        $query_terms[] = 'sort=日期>';
+        $ret = LYAPI_SearchAction::getCollections('law_version', implode('&', $query_terms));
+        foreach ($ret->lawversions as $version) {
+            foreach ($version->歷程 ?? [] as $log) {
+                if ($log->關係文書->billNo ?? false) {
+                    $skips[$log->關係文書->billNo] = true;
+                }
+            }
+        }
+
         $query_terms = [];
         $query_terms[] = '屆=' . $data['屆'];
         $query_terms[] = '法律編號=' . $data['法律編號'];
@@ -141,68 +154,23 @@ class LYAPI_Type_Law extends LYAPI_Type
 
         $ret = LYAPI_SearchAction::getCollections('bill', implode('&', $query_terms));
         // 先找出所有三讀的關聯議案
-        $skips = [];
-        foreach ($ret->bills as $bill) {
-            if ($bill->議案狀態 == '三讀') {
-                $skips[$bill->議案編號] = true;
-                foreach ($bill->關連議案 as $related) {
-                    $skips[$related->billNo] = true;
-                }
-                continue;
-            }
-        }
-        $bill_log = [];
+
+        $bills = [];
         foreach ($ret->bills as $bill) {
             if (isset($skips[$bill->議案編號])) {
                 continue;
             }
-            if (isset($skips[$bill->提案編號])) {
-                continue;
-            }
-            $skips[$bill->提案編號] = true;
-
-            if ($bill->提案來源 == '審查報告') {
-                $bill_log["發文-{$bill->議案編號}"] = [
-                    '關係文書' => [
-                        '連結' => $bill->相關附件[0]->網址,
-                        'billNo' => $bill->議案編號,
-                        '類型' => '審查報告',
-                    ],
-                    '進度' => '委員會發文',
-                    '會議日期' => $log->日期[0],
-                ];
-            } else {
-                $bill_log["提案-{$bill->議案編號}"] = [
-                    '關係文書' => [
-                        '連結' => $bill->相關附件[0]->網址,
-                        'billNo' => $bill->議案編號,
-                        '類型' => '提案',
-                    ],
-                    '主提案' => $bill->提案人[0] ?? $bill->{'提案單位/提案委員'},
-                    '進度' => '一讀',
-                    '會議日期' => $bill->提案日期,
-                ];
-            }
-
-            foreach ($bill->議案流程 as $log) {
-                if ($log->狀態 == '委員會發文' and $bill->提案來源 != '委員提案') {
-                } elseif ($log->狀態 == '委員會審查') {
-                    $bill_log["審查-{$log->日期[0]}"] = [
-                        '進度' => '委員會審查',
-                        '會議日期' => $log->日期[0],
-                    ];
-                } elseif ($log->狀態 == '排入院會(討論事項)') {
-                    $bill_log["院會-{$log->日期[0]}"] = [
-                        '進度' => '二讀',
-                        '會議日期' => $log->日期[0],
-                    ];
+            if ($bill->提案編號 ?? false) {
+                if (isset($skips[$bill->提案編號])) {
+                    continue;
                 }
+
+                $skips[$bill->提案編號] = true;
             }
+            $bills[] = $bill;
         }
-        $bill_log = array_values($bill_log);
-        usort($bill_log, function ($a, $b) {
-            return strtotime($a['會議日期']) - strtotime($b['會議日期']);
-        });
+        $groups = ProgressHelper::groupBills($bills);
+        return $groups;
         $data['歷程'] = $bill_log;
 
         return [
