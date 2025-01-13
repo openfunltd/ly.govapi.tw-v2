@@ -131,8 +131,10 @@ class LYAPI_Type_Law extends LYAPI_Type
         $ret = LYAPI_SearchAction::getCollections('law_version', implode('&', $query_terms));
         foreach ($ret->lawversions as $version) {
             foreach ($version->歷程 ?? [] as $log) {
-                if ($log->關係文書->billNo ?? false) {
-                    $skips[$log->關係文書->billNo] = true;
+                foreach ($log->關係文書 ?? [] as $record) {
+                    if ($record->billNo ?? false) {
+                        $skips[$record->billNo] = true;
+                    }
                 }
             }
         }
