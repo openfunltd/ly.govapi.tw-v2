@@ -7,10 +7,15 @@ class ProgressHelper
         $match_keys = [];
         foreach ([$a, $b] as $idx => $bill) {
             // check 關聯議案
-            foreach ($bill->關連議案 as $related_bill) {
-                if ($related_bill->billNo ?? false) {
-                    $key = $related_bill->billNo;
+            $billNos = [$bill->議案編號];
+            if ($bill->關連議案) {
+                foreach ($bill->關連議案 as $related_bill) {
+                    if ($related_bill->billNo ?? false) {
+                        $billNos[] = $related_bill->billNo;
+                    }
                 }
+            }
+            foreach ($billNos as $key) {
                 if (!array_key_exists($key, $match_keys)) {
                     $match_keys[$key] = $idx;
                 } elseif ($idx != $match_keys[$key]) {
@@ -19,6 +24,7 @@ class ProgressHelper
             }
 
             // check 是否有同一日委員會審查
+            /*
             foreach ($bill->議案流程 as $log) {
                 if (in_array($log->狀態, [
                     '委員會審查',
@@ -32,6 +38,7 @@ class ProgressHelper
                     }
                 }
             }
+             */
         }
         return false;
     }
@@ -101,7 +108,7 @@ class ProgressHelper
             }
 
             foreach ($bill->議案流程 as $log) {
-                if ($log->狀態 == '委員會發文' and $bill->提案來源 != '委員提案') {
+                if ($log->狀態 == '委員會發文' and $bill->提案來源 == '審查報告') {
                     $ret->id = "審查完成-{$log->日期[0]}-{$bill->議案編號}";
                     $bill_log["發文-{$bill->議案編號}"] = [
                         '關係文書' => [
