@@ -172,6 +172,7 @@ class LYAPI_Type_Law extends LYAPI_Type
             $bills[] = $bill;
         }
         $groups = ProgressHelper::groupBills($bills);
-        return $groups;
+        $data['歷程'] = $groups;
+        return $data;
     }
 }
