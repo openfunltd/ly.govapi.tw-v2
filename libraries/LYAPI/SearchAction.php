@@ -229,6 +229,7 @@ class LYAPI_SearchAction
         }
         $return_key = LYAPI_Type::run($type, 'getReturnKey');
         $records->{$return_key} = [];
+        // 先掃一遍所有資料，把有在 aggMap 的欄位的 ID 儲存起來
         LYAPI_Type::run($type, 'checkHitRecords', [$obj->hits->hits]);
         foreach ($obj->hits->hits as $hit) {
             $records->{$return_key}[] = LYAPI_Type::run($type, 'buildData', [$hit->_source, $hit->_id, true, $hit->highlight]);

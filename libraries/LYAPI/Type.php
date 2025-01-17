@@ -156,39 +156,49 @@ class LYAPI_Type
     /**
      * 利用 $field_map ，將單筆資料的 elastic 的資料欄位改名成 api 輸出的欄位
      */
-    public static function filterData($data, $field_map, $prefix, $only_check_agg_map = false)
+    public static function filterData($origin_data, $field_map, $es_prefix, $output_prefix, $only_check_agg_map = false)
     {
-        if (is_array($data)) {
-            $data = array_map(function ($v) use ($field_map, $prefix, $only_check_agg_map) {
-                return self::filterData($v, $field_map, $prefix, $only_check_agg_map);
-            }, $data);
+        if (is_array($origin_data)) {
+            $data = array_map(function ($v) use ($field_map, $es_prefix, $output_prefix, $only_check_agg_map) {
+                return self::filterData($v, $field_map, $es_prefix, $output_prefix, $only_check_agg_map);
+            }, $origin_data);
             return $data;
         }
-        if (!is_object($data)) {
-            return $data;
+        if (!is_object($origin_data)) {
+            return $origin_data;
         }
 
-        foreach ($field_map as $k => $v) {
-            if ($prefix) {
-                if (strpos($k, $prefix) !== 0) {
-                    continue;
-                }
-                $k = substr($k, strlen($prefix));
+        $data = new StdClass;
+        $outputed = [];
+        foreach ($field_map as $es_key => $output_key) {
+            if (strpos($es_key, $es_prefix) !== 0) {
+                continue;
             }
-            if (property_exists($data, $k)) {
-                $data->{$v} = self::filterData($data->{$k}, $field_map, rtrim($prefix . $k, '.') . '.', $only_check_agg_map);
+            $es_key = substr($es_key, strlen($es_prefix));
+            if (property_exists($origin_data, $es_key)) {
+                $outputed[$es_key] = true;
+                $data->{$output_key} = self::filterData(
+                    $origin_data->{$es_key},
+                    $field_map,
+                    rtrim($es_prefix . $es_key, '.') . '.',
+                    rtrim($output_prefix . $output_key, '.') . '.',
+                    $only_check_agg_map
+                );
                 if ($only_check_agg_map) {
-                    static::addAggValue($v, $data->{$v});
+                    static::addAggValue(rtrim($output_prefix . $output_key, '.'), $origin_data->{$es_key});
                 } else {
-                    $v_str = self::getAggValueMap($v, $data->{$v}, get_called_class());
+                    $v_str = self::getAggValueMap(rtrim($output_prefix . $output_key, '.'), $origin_data->{$es_key}, get_called_class());
                     if ($v_str) {
-                        $data->{$v . ':str'} = $v_str;
+                        $data->{$output_key . ':str'} = $v_str;
                     }
                 }
-                if ($k != $v) {
-                    unset($data->{$k});
-                }
             }
+        }
+        foreach ($origin_data as $k => $v) {
+            if (array_key_exists($k, $outputed)) {
+                continue;
+            }
+            $data->{$k} = self::filterData($v, $field_map, $es_prefix, $output_prefix, $only_check_agg_map);
         }
         return $data;
     }
@@ -212,14 +222,14 @@ class LYAPI_Type
             $data->{$field_map['_id']} = $id;
         }
         if ($in_collection) {
-            $data = self::filterData($data, $field_map, '', false);
+            $data = self::filterData($data, $field_map, '', '', false);
         } else {
             $checking_data = clone $data;
-            self::filterData($checking_data, $field_map, '', true);
-            $data = self::filterData($data, $field_map, '', false);
+            self::filterData($checking_data, $field_map, '', '', true);
+            $data = self::filterData($data, $field_map, '', '', false);
         }
         if (!is_null($highlight)) {
-            $highlight = self::filterData($highlight, $field_map, '', false);
+            $highlight = self::filterData($highlight, $field_map, '', '', false);
             foreach ($highlight as $k => $v) {
                 $data->{$k . ':highlight'} = $v;
             }
@@ -352,6 +362,7 @@ class LYAPI_Type
     public static function getAggValueMap($field, $value, $class)
     {
         $agg_map = static::aggMap();
+
         if (!array_key_exists($field, $agg_map)) {
             return null;
         }
@@ -418,7 +429,7 @@ class LYAPI_Type
         }
         foreach ($hits as $hit) {
             $source = clone $hit->_source;
-            self::filterData($source, $field_map, '', true);
+            self::filterData($source, $field_map, '', '', true);
         }
     }
 }
