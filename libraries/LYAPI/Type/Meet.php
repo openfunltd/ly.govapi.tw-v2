@@ -55,6 +55,11 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 'description' => '議事網資料.關係文書.議案.議案編號 [例: 202110071090000]',
                 'type' => 'string',
             ],
+            '議事網資料.關係文書.議案.laws' => [
+                'es_field' => 'ppg_data.關係文書.bills.laws.keyword',
+                'description' => '議事網資料.laws [例: 01177]',
+                'type' => 'string',
+            ]
         ];
     }
 
@@ -88,11 +93,13 @@ class LYAPI_Type_Meet extends LYAPI_Type
             'meet_data.startTime' => '開始時間',
             'meet_data.endTime' => '結束時間',
             'ppg_data' => '議事網資料', // from https://ppg.ly.gov.tw/ppg/#section-2
+            'ppg_data.關係文書' => '關係文書',
             'ppg_data.關係文書.bills' => '議案',
             'ppg_data.關係文書.bills.title' => '標題',
             'ppg_data.關係文書.bills.billNo' => '議案編號',
             'ppg_data.關係文書.bills.comment' => '意見',
             'ppg_data.關係文書.bills.type' => '類別',
+            'ppg_data.關係文書.bills.laws' => '法律編號',
             'ppg_data.features' => '資訊',
             'ppg_data.attachments' => '附件',
             'ppg_data.attachments.filetype' => '格式',
