@@ -171,7 +171,9 @@ class LYAPI_Type
         $data = new StdClass;
         $outputed = [];
         foreach ($field_map as $es_key => $output_key) {
-            if (strpos($es_key, $es_prefix) !== 0) {
+            if ($es_prefix and strpos($es_key, $es_prefix) !== 0) {
+                continue;
+            } elseif (!$es_prefix and strpos($es_key, '.') !== false) {
                 continue;
             }
             $es_key = substr($es_key, strlen($es_prefix));
