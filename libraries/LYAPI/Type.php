@@ -324,7 +324,6 @@ class LYAPI_Type
     public static function termSearch($class, $field, $type, $config)
     {
         $terms = array_keys(self::$_agg_values[$class][$field]);
-        error_log("termSearch: {$field} " . json_encode($terms));
         $cmd = new StdClass;
         $cmd->size = count($terms);
         $cmd->query = new StdClass;
