@@ -151,6 +151,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
     {
         return [
             '委員會代號' => ['committee', ['委員會代號', '委員會名稱']],
+            '議事網資料.關係文書.議案.法律編號' => ['law', ['法律編號', '名稱']],
         ];
     }
 

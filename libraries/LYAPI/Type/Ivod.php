@@ -92,7 +92,7 @@ class LYAPI_Type_Ivod extends LYAPI_Type
     {
         return [
             '會議資料.委員會代碼' => ['committee', ['委員會代號', '委員會名稱']],
-            '會議.會議代碼' => ['meet', ['會議代碼', '會議標題']],
+            '會議資料.會議代碼' => ['meet', ['會議代碼', '會議標題']],
         ];
     }
 
