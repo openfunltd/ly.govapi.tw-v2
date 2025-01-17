@@ -232,7 +232,7 @@ class LYAPI_SearchAction
         // 先掃一遍所有資料，把有在 aggMap 的欄位的 ID 儲存起來
         LYAPI_Type::run($type, 'checkHitRecords', [$obj->hits->hits]);
         foreach ($obj->hits->hits as $hit) {
-            $records->{$return_key}[] = LYAPI_Type::run($type, 'buildData', [$hit->_source, $hit->_id, true, $hit->highlight]);
+            $records->{$return_key}[] = LYAPI_Type::run($type, 'buildData', [$hit->_source, $hit->_id, true, $hit->highlight ?? null]);
         }
         if (self::getParams('agg')) {
             $records->aggs = [];
@@ -272,7 +272,7 @@ class LYAPI_SearchAction
             return $records;
         }
         $relations = LYAPI_Type::run($type, 'getRelations');
-        if ($sub[0]) {
+        if ($sub[0] ?? false) {
             if (!array_key_exists($sub[0], $relations)) {
                 $records = new StdClass;
                 $records->error = true;
@@ -300,7 +300,7 @@ class LYAPI_SearchAction
         $records = new StdClass;
         $records->error = false;
         $records->id = $ids;
-        $records->data = LYAPI_Type::run($type, 'buildData', [$obj->_source, $hit->_id, false]);
+        $records->data = LYAPI_Type::run($type, 'buildData', [$obj->_source, $obj->_id, false]);
         $records->supported_relations = LYAPI_Type::run($type, 'getRelations');
         $records->relations = [];
         foreach ($records->supported_relations as $k => $v) {
