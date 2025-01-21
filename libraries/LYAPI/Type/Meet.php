@@ -55,7 +55,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 'description' => '議事網資料.關係文書.議案.議案編號 [例: 202110071090000]',
                 'type' => 'string',
             ],
-            '議事網資料.關係文書.議案.laws' => [
+            '議事網資料.關係文書.議案.法律編號' => [
                 'es_field' => 'ppg_data.關係文書.bills.laws.keyword',
                 'description' => '議事網資料.laws [例: 01177]',
                 'type' => 'string',
