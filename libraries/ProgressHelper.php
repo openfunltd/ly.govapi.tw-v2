@@ -158,6 +158,13 @@ class ProgressHelper
             if ($b['進度'] == '一讀' and $a['進度'] != '一讀') {
                 return 1;
             }
+            // 包含二讀的一定要比包含三讀的優先
+            if (strpos($a['進度'], '二讀') !== false and strpos($b['進度'], '三讀') !== false) {
+                return -1;
+            }
+            if (strpos($b['進度'], '二讀') !== false and strpos($a['進度'], '三讀') !== false) {
+                return 1;
+            }
             return 0;
         });
         $ret->bill_log = $bill_log;
