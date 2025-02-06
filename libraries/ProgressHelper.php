@@ -10,8 +10,8 @@ class ProgressHelper
             $billNos = [$bill->議案編號];
             if ($bill->關連議案) {
                 foreach ($bill->關連議案 as $related_bill) {
-                    if ($related_bill->billNo ?? false) {
-                        $billNos[] = $related_bill->billNo;
+                    if ($related_bill->議案編號 ?? false) {
+                        $billNos[] = $related_bill->議案編號;
                     }
                 }
             }
