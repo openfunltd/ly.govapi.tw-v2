@@ -61,6 +61,10 @@ class LYAPI_Type_Law extends LYAPI_Type
             'latest_version.date' => '日期',
             'latest_version.action' => '動作', 
             'latest_version.version_id' => '版本編號',
+            'first_version' => '最早版本',
+            'first_version.date' => '日期',
+            'first_version.action' => '動作',
+            'first_version.version_id' => '版本編號',
         ];
     }
 
