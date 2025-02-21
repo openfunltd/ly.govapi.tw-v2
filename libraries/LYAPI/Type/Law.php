@@ -84,6 +84,7 @@ class LYAPI_Type_Law extends LYAPI_Type
         return [
             '名稱',
             '其他名稱',
+            '別名',
         ];
     }
 
