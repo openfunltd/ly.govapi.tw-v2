@@ -407,7 +407,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
 
     public static function customData($data, $id)
     {
-        foreach ($data->{'相關附件'} as $idx => $attachment) {
+        foreach ($data->{'相關附件'} ?? [] as $idx => $attachment) {
             if (strpos($attachment->{'名稱'}, '關係文書DOC') !== false) {
                 $basename = basename($attachment->{'網址'}, '.doc');
                 $data->{'相關附件'}[$idx]->{'HTML結果'} = sprintf("https://%s/bill_doc/%s/html"
