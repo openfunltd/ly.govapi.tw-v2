@@ -80,6 +80,11 @@ class LYAPI_Type_Bill extends LYAPI_Type
                 'description' => '對照表對應的法條編號 [例: 01945:01945:2015-01-22-全文修正:16]',
                 'type' => 'string',
             ],
+            '提案日期' => [
+                'es_field' => 'first_time',
+                'description' => '議案的提案日期 [例: 2021-10-06]',
+                'type' => 'date',
+            ],
         ];
     }
 
