@@ -119,10 +119,10 @@ class LYAPI_SearchAction
 
                     $range_obj = [];
                     if ($v[0]) {
-                        $range_obj['gte'] = date('c', strtotime($v[0]));
+                        $range_obj['gte'] = $v[0];
                     }
                     if ($v[1]) {
-                        $range_obj['lte'] = date('c', strtotime($v[1]));
+                        $range_obj['lte'] = $v[1];
                     }
                     $cmd->query->bool->must[] = (object)[
                         'range' => (object)[
