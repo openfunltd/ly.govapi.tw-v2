@@ -10,7 +10,7 @@ class IndexController extends MiniEngine_Controller
     public function robotsAction()
     {
         header('Content-Type: text/plain');
-        echo "#\n";
+        echo "User-agent: *\nCrawl-delay: 3\n";
         return $this->noview();
     }
 }
