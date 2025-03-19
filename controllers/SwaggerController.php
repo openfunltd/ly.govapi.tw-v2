@@ -9,6 +9,11 @@ class SwaggerController extends MiniEngine_Controller
         return $this->noview();
     }
 
+    public function uiAction()
+    {
+        //
+    }
+
     protected function pascal2Underscore(string $pascal): string
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $pascal));
