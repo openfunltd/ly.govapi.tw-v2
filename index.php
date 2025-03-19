@@ -6,6 +6,10 @@ MiniEngine::dispatch(function($uri){
         return ['index', 'robots'];
     }
 
+    if ($uri == '/swagger') {
+        return ['swagger', 'ui'];
+    }
+
     if ($uri == '/swagger.yaml') {
         return ['swagger', 'index'];
     }
