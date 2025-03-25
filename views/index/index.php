@@ -29,7 +29,7 @@ $news = json_decode($ret) ?? [];
 <main role="main">
   <div class="container" style="max-width: 1120px;">
     <div class="pt-5 pb-4 text-center">
-      <img src="/static/images/api.svg" width="140" height="140">
+      <img src="static/images/api.svg" width="140" height="140">
       <h1 class="display-4 fw-semibold">LYAPI</h1>
       <p class="lead">
         彙整四散於各立院資料庫的資料，並且將 PDF、Word 等文件轉換為機器可讀格式。不必翻閱數百頁文件或在多個網站與分頁間不停切換，讓你能快速檢索、組合資料，整合成所需的資訊。
@@ -38,7 +38,7 @@ $news = json_decode($ret) ?? [];
     <div class="row pb-5">
       <div class="col-md-8">
         <div class="fs-4 mb-3 d-flex align-items-center">
-          <img src="/static/images/news.svg" style="height: 1em;" class="me-2">
+          <img src="static/images/news.svg" style="height: 1em;" class="me-2">
           <h2 class="mb-0 fs-4">最新消息</h2>
         </div>
         <table class="table table-hovertable table-light">
@@ -56,7 +56,7 @@ $news = json_decode($ret) ?? [];
       </div>
       <div class="col-md-4 pt-5 pt-md-0">
         <div class="fs-4 mb-3 d-flex align-items-center">
-          <img src="/static/images/terminal.svg" style="height: 1em;" class="me-2">
+          <img src="static/images/terminal.svg" style="height: 1em;" class="me-2">
           <h2 class="mb-0 fs-4">相關應用</h2>
         </div>
         <ol class="list-group">
@@ -91,19 +91,19 @@ $news = json_decode($ret) ?? [];
     </div>
     <div class="row pb-5">
       <div class="col-md-4 pt-5 pt-md-0 text-center">
-        <img class="rounded-circle" src="/static/images/swagger.svg" width="100" height="100">
+        <img class="rounded-circle" src="static/images/swagger.svg" width="100" height="100">
         <h2>Swagger</h2>
         <p>LYAPI 提供 Swagger 頁面，開發者可直覺地瀏覽可用的資料類別與取得方式，並直接測試 API endpoint，快速驗證回應內容，加速開發流程。</p>
         <p><a class="btn btn-secondary" href="/swagger" role="button">查閱 API 文件</a></p>
       </div>
       <div class="col-md-4 pt-5 pt-md-0 text-center">
-        <img src="/static/images/document.svg" width="100" height="100">
+        <img src="static/images/document.svg" width="100" height="100">
         <h2>使用指南</h2>
         <p>我們把開發相關應用過程中累積的經驗，編寫成使用指南。適合對立法院資料不熟悉的使用者快速了解如何使用 LYAPI 的資料與工具。</p>
         <p><a class="btn btn-secondary" href="https://hackmd.io/@openfunltd/S1iLBqP21l" role="button" target="_blank">瀏覽指南</a></p>
       </div>
       <div class="col-md-4 pt-5 pt-md-0 text-center">
-        <img class="rounded-circle" src="/static/images/hf.svg" width="100" height="100">
+        <img class="rounded-circle" src="static/images/hf.svg" width="100" height="100">
         <h2>Hugging Face</h2>
         <p>針對需要進行統計或模型訓練的使用者，我們已將資料集打包並上傳至 Hugging Face，無需再透過 LYAPI 爬取整個資料庫。</p>
         <p><a class="btn btn-secondary" href="https://huggingface.co/collections/openfun/tw-legislative-yuan-data-67c7e14902935d02b0b97a3f" role="button" target="_blank">瀏覽 / 下載資料集</a></p>
