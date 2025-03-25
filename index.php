@@ -6,6 +6,9 @@ if (strpos($_SERVER['REQUEST_URI'], '/v2') === 0) {
 }
 
 MiniEngine::dispatch(function($uri){
+    if (strpos($uri, '/v2') === 0) {
+        $uri = substr($uri, 3);
+    }
     if ($uri == '/robots.txt') {
         return ['index', 'robots'];
     }
