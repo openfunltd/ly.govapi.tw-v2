@@ -1,6 +1,10 @@
 <?php
 include(__DIR__ . '/init.inc.php');
 
+if (strpos($_SERVER['REQUEST_URI'], '/v2') === 0) {
+    $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 3);
+}
+
 MiniEngine::dispatch(function($uri){
     if ($uri == '/robots.txt') {
         return ['index', 'robots'];
