@@ -94,7 +94,7 @@ $news = json_decode($ret) ?? [];
         <img class="rounded-circle" src="static/images/swagger.svg" width="100" height="100">
         <h2>Swagger</h2>
         <p>LYAPI 提供 Swagger 頁面，開發者可直覺地瀏覽可用的資料類別與取得方式，並直接測試 API endpoint，快速驗證回應內容，加速開發流程。</p>
-        <p><a class="btn btn-secondary" href="/swagger" role="button">查閱 API 文件</a></p>
+        <p><a class="btn btn-secondary" href="swagger" role="button">查閱 API 文件</a></p>
       </div>
       <div class="col-md-4 pt-5 pt-md-0 text-center">
         <img src="static/images/document.svg" width="100" height="100">
