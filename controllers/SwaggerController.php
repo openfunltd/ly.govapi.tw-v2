@@ -245,6 +245,9 @@ class SwaggerController extends MiniEngine_Controller
                 'title' => '立法院 API v2',
                 'version' => '2.0.0',
             ],
+            'servers' => [
+                ['url' => 'https://ly.govapi.tw/v2'],
+            ],
         ];
 
         $data['paths'] = [
