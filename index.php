@@ -1,6 +1,9 @@
 <?php
 include(__DIR__ . '/init.inc.php');
 
+if ($_SERVER['REQUEST_URI'] == '/v2') {
+    header('Location: /v2/');
+}
 if (strpos($_SERVER['REQUEST_URI'], '/v2') === 0) {
     $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 3);
 }
