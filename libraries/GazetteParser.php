@@ -295,7 +295,10 @@ class GazetteParser
         $ret->votes = [];
         foreach ($ret->blocks as $idx => $block) {
             while ($line = array_shift($block)) {
-                if (trim($line) === '表決結果名單：') {
+                if (in_array(trim($line), [
+                    '表決結果名單：',
+                    '本次會議各項記名表決結果名單：',
+                ])) {
                     $vote = new StdClass;
                     $vote->line_no = $ret->block_lines[$idx];
                     $prev_key = null;
