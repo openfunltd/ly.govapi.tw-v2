@@ -135,7 +135,7 @@ class ProgressHelper
                         '會議代碼' => $log->會議代碼 ?? '',
                     ];
                 } elseif ($log->狀態 == '撤案') {
-                    $bill_log["撤案-{$log->日期[0]}"] = [
+                    $bill_log["撤案-{$bill->議案編號}-{$log->日期[0]}"] = [
                         '關係文書' => [
                             '連結' => $bill->相關附件[0]->網址,
                             'billNo' => $bill->議案編號,
