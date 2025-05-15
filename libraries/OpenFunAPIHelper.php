@@ -37,15 +37,15 @@ class OpenFunAPIHelper
         $counts = [];
         $counts[] = ['project-count', "project-count:{$project}", 1];
         $counts[] = ['project-size', "project-size:{$project}", $size];
-        $counts[] = ['call-count-all', "call-count:{$project}:{$class}:all", 1];
-        $counts[] = ['call-size-all', "call-size:{$project}:{$class}:all", $size];
-        $counts[] = ['call-count-ip', "call-count:{$project}:{$class}:ip:{$ip}", 1];
-        $counts[] = ['call-size-ip', "call-size:{$project}:{$class}:ip:{$ip}", $size];
+        $counts[] = ['call-count-class', "call-count:{$project}:class:{$class}", 1];
+        $counts[] = ['call-size-class', "call-size:{$project}:class:{$class}", $size];
+        $counts[] = ['call-count-ip', "call-count:{$project}:ip:{$ip}", 1];
+        $counts[] = ['call-size-ip', "call-size:{$project}:ip:{$ip}", $size];
 
         if (preg_match('/^https?:\/\/([^\/]+)(.*)$/', $referer, $matches)) {
             $domain = $matches[1];
-            $counts[] = ['call-count-referer', "call-count:{$project}:{$class}:referer:{$domain}", 1];
-            $counts[] = ['call-size-referer', "call-size:{$project}:{$class}:referer:{$domain}", $size];
+            $counts[] = ['call-count-referer', "call-count:{$project}:referer:{$domain}", 1];
+            $counts[] = ['call-size-referer', "call-size:{$project}:referer:{$domain}", $size];
         }
         self::counterInc($counts);
     }
