@@ -138,13 +138,25 @@ class SwaggerController extends MiniEngine_Controller
         }
     }
 
-    protected function getResponses(string $subject): stdClass
+    protected function getResponses(string $subject, ?string $schema_ref = null): stdClass
     {
+        $response_200 = [
+            'description' => sprintf('%s資料', $subject),
+        ];
+
+        if ($schema_ref) {
+            $response_200['content'] = [
+                'application/json' => [
+                    'schema' => [
+                        '$ref' => $schema_ref,
+                    ],
+                ],
+            ];
+        }
+
         // 要轉成 stdClass 否則 key 就算加了引號還是會被轉成數字
         return (object)[
-            '200' => [
-                'description' => sprintf('%s資料', $subject),
-            ],
+            '200' => $response_200,
             '404' => [
                 'description' => sprintf('找不到%s資料', $subject),
                 'content' => [
@@ -168,7 +180,6 @@ class SwaggerController extends MiniEngine_Controller
         $paths = [];
         $entity = basename($file, '.php');
         $class_name = $this->getClassNameByEntity($entity);
-        $ref = "#/components/schemas/{$entity}";
         $endpoint_types = $class_name::getEndpointTypes();
         if (empty($endpoint_types)) {
             return [];
@@ -186,7 +197,7 @@ class SwaggerController extends MiniEngine_Controller
                     'summary' => $this->getEndpointSummary($class_name::getTypeSubject(), $endpoint_type),
                     'operationId' => $this->getOperationId($entity, $endpoint_type),
                     'parameters' => $this->getParameters($class_name, $endpoint_type),
-                    'responses' => $this->getResponses($class_name::getTypeSubject()),
+                    'responses' => $this->getResponses($class_name::getTypeSubject(), $this->getSchemaRef($entity, $endpoint_type)),
                 ],
             ];
         }
@@ -200,12 +211,51 @@ class SwaggerController extends MiniEngine_Controller
                     'summary' => $this->getEndpointSummary($info['subject'], 'list'),
                     'operationId' => $this->getOperationId($entity, 'relation', $relation_name),
                     'parameters' => $this->getParameters($class_name, 'relation', $info['type']),
-                    'responses' => $this->getResponses($info['subject'] ?? ''),
+                    'responses' => $this->getResponses($info['subject'] ?? '', $this->getSchemaRef($info['type'], 'relation')),
                 ],
             ];
         }
 
         return $paths;
+    }
+
+    protected function getSchemaRef(string $entity, string $endpoint_type): ?string
+    {
+        $class_name = $this->getClassNameByEntity($entity);
+        switch ($endpoint_type) {
+        case 'item':
+            if (method_exists($class_name, 'getProperties')) {
+                return "#/components/schemas/{$entity}";
+            }
+            break;
+        case 'list':
+            // TODO
+            break;
+        case 'relation':
+            // TODO
+            break;
+        }
+        return null;
+    }
+
+    protected function generateSchemasFromFile($file): ?array
+    {
+        $entity = basename($file, '.php');
+        $class_name = $this->getClassNameByEntity($entity);
+        if (!class_exists($class_name)) {
+            return null;
+        }
+        $schemas = [];
+        //echo "[Generate schema from {$file}]\n";
+
+        if (method_exists($class_name, 'getProperties')) {
+            $schemas[$entity] = [
+                'type' => 'object',
+                'properties' => $class_name::getProperties(),
+            ];
+        }
+
+        return $schemas;
     }
 
     protected function parseToYaml($data, $indent = ''): string
@@ -288,6 +338,15 @@ class SwaggerController extends MiniEngine_Controller
                 ],
             ],
         ];
+
+        foreach ($auto_gen_files as $file) {
+            foreach (glob($file) as $f) {
+                $schemas = $this->generateSchemasFromFile($f) ?? [];
+                foreach ($schemas as $name => $schema) {
+                    $data['components']['schemas'][$name] = $schema;
+                }
+            }
+        }
 
         return $this->parseToYaml($data);
     }
