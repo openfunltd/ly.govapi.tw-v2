@@ -433,4 +433,20 @@ class LYAPI_Type
             self::filterData($source, $field_map, '', '', true);
         }
     }
+
+    /**
+     * 取得 item api 的回傳欄位資訊，用於 swagger 文件
+     */
+    public static function getItemProperties()
+    {
+        return [];
+    }
+
+    /**
+     * 取得 list api 的回傳欄位資訊，用於 swagger 文件
+     */
+    public static function getEntryProperties()
+    {
+        return [];
+    }
 }

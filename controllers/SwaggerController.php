@@ -224,12 +224,12 @@ class SwaggerController extends MiniEngine_Controller
         $class_name = $this->getClassNameByEntity($entity);
         switch ($endpoint_type) {
         case 'item':
-            if (method_exists($class_name, 'getItemProperties')) {
+            if (!empty($class_name::getItemProperties())) {
                 return "#/components/schemas/{$entity}";
             }
             break;
         case 'list':
-            if (method_exists($class_name, 'getEntryProperties')) {
+            if (!empty($class_name::getEntryProperties())) {
                 return "#/components/schemas/{$entity}List";
             }
             break;
@@ -250,14 +250,14 @@ class SwaggerController extends MiniEngine_Controller
         $schemas = [];
         //echo "[Generate schema from {$file}]\n";
 
-        if (method_exists($class_name, 'getItemProperties')) {
+        if (!empty($class_name::getItemProperties())) {
             $schemas[$entity] = [
                 'type' => 'object',
                 'properties' => $class_name::getItemProperties(),
             ];
         }
 
-        if (method_exists($class_name, 'getEntryProperties')) {
+        if (!empty($class_name::getEntryProperties())) {
             // list schema
             $items_key = sprintf('%ss', strtolower($entity));
             $schemas["{$entity}List"] = [
