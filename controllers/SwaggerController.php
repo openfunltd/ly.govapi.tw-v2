@@ -87,7 +87,7 @@ class SwaggerController extends MiniEngine_Controller
             'example' => 1,
         ];
         $parameters[] = [
-            'name' => 'per_page',
+            'name' => 'limit',
             'in' => 'query',
             'description' => '每頁筆數',
             'required' => false,
