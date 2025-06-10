@@ -262,69 +262,69 @@ class LYAPI_Type_Ivod extends LYAPI_Type
                     'lineno' => [
                         'type' => 'integer',
                         'description' => '卷',
-                ],
-                'blocks' => [
-                    'type' => 'array',
-                    'items' => [
+                    ],
+                    'blocks' => [
                         'type' => 'array',
                         'items' => [
-                            'type' => 'string',
-                            'description' => '公報逐字稿內文',
-                        ],
-                    ],
-                ],
-                'agenda' => [
-                    'type' => 'object',
-                    'properties' => [
-                        'page_start' => [
-                            'type' => 'integer',
-                            'description' => '公報議程開始頁碼',
-                        ],
-                        'page_end' => [
-                            'type' => 'integer',
-                            'description' => '公報議程結束頁碼',
-                        ],
-                        'meet_id' => [
-                            'type' => 'string',
-                            'description' => '會議代碼',
-                        ],
-                        'speakers' => [
                             'type' => 'array',
                             'items' => [
                                 'type' => 'string',
-                                'description' => '發言人姓名',
+                                'description' => '公報逐字稿內文',
                             ],
-                        ],
-                        'meetingDate' => [
-                            'type' => 'string',
-                            'format' => 'date',
-                            'description' => '會議日期',
-                        ],
-                        'gazette_id' => [
-                            'type' => 'string',
-                            'description' => '公報 ID',
-                        ],
-                        'agenda_lcidc_ids' => [
-                            'type' => 'array',
-                            'items' => [
-                                'type' => 'string',
-                                'description' => 'LCIDC 編號',
-                            ],
-                        ],
-                        'meet_name' => [
-                            'type' => 'string',
-                            'description' => '會議名稱',
-                        ],
-                        'content' => [
-                            'type' => 'string',
-                            'description' => '議程內容',
-                        ],
-                        'agenda_id' => [
-                            'type' => 'string',
-                            'description' => '議程 ID',
                         ],
                     ],
-                ],
+                    'agenda' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'page_start' => [
+                                'type' => 'integer',
+                                'description' => '公報議程開始頁碼',
+                            ],
+                            'page_end' => [
+                                'type' => 'integer',
+                                'description' => '公報議程結束頁碼',
+                            ],
+                            'meet_id' => [
+                                'type' => 'string',
+                                'description' => '會議代碼',
+                            ],
+                            'speakers' => [
+                                'type' => 'array',
+                                'items' => [
+                                    'type' => 'string',
+                                    'description' => '發言人姓名',
+                                ],
+                            ],
+                            'meetingDate' => [
+                                'type' => 'string',
+                                'format' => 'date',
+                                'description' => '會議日期',
+                            ],
+                            'gazette_id' => [
+                                'type' => 'string',
+                                'description' => '公報 ID',
+                            ],
+                            'agenda_lcidc_ids' => [
+                                'type' => 'array',
+                                'items' => [
+                                    'type' => 'string',
+                                    'description' => 'LCIDC 編號',
+                                ],
+                            ],
+                            'meet_name' => [
+                                'type' => 'string',
+                                'description' => '會議名稱',
+                            ],
+                            'content' => [
+                                'type' => 'string',
+                                'description' => '議程內容',
+                            ],
+                            'agenda_id' => [
+                                'type' => 'string',
+                                'description' => '議程 ID',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ];
