@@ -99,6 +99,22 @@ class SwaggerController extends MiniEngine_Controller
         return $parameters;
     }
 
+    protected function getOutputFieldsParameters(string $class_name): array
+    {
+        $parameters = [];
+        $parameters[] = [
+            'name' => 'output_fields',
+            'in' => 'query',
+            'description' => '輸出欄位',
+            'required' => false,
+            'schema' => [
+                'type' => 'array',
+            ],
+            'example' => array_keys($class_name::getIdFieldsInfo()),
+        ];
+        return $parameters;
+    }
+
     protected function getIdParameters(string $class_name): array
     {
         $parameters = [];
@@ -121,7 +137,10 @@ class SwaggerController extends MiniEngine_Controller
     {
         switch ($endpoint_type) {
         case 'list':
-            return $this->getFilterParameters($class_name);
+            return array_merge(
+                $this->getFilterParameters($class_name),
+                $this->getOutputFieldsParameters($class_name),
+            );
         case 'item':
             return $this->getIdParameters($class_name);
         case 'relation':
@@ -131,6 +150,7 @@ class SwaggerController extends MiniEngine_Controller
                 return array_merge(
                     $this->getIdParameters($class_name),
                     $this->getFilterParameters($relation_class_name),
+                    $this->getOutputFieldsParameters($class_name),
                 );
             } else {
                 return $this->getIdParameters($class_name);
