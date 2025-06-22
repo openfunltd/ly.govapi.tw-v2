@@ -11,9 +11,9 @@ class LYAPI_Type_Committee extends LYAPI_Type
     {
         return [
             '委員會類別' => [
-                'es_field' => 'comtType.keyword',
+                'es_field' => 'comtType',
                 'description' => '委員會類別 [例: 常設委員會]',
-                'type' => 'string',
+                'type' => 'integer',
             ],
             '委員會代號' => [
                 'es_field' => 'comtCd.keyword',
@@ -66,7 +66,7 @@ class LYAPI_Type_Committee extends LYAPI_Type
     public static function filterFields()
     {
         return [
-            '委員會類別' => 'comtType.keyword',
+            '委員會類別' => 'comtType',
             '委員會代號' => 'comtCd',
         ];
     }
