@@ -126,7 +126,9 @@ class LYAPI_Type_Legislator extends LYAPI_Type
 
     public static function customData($data, $id)
     {
-        $data->照片位址 = str_replace('http://', 'https://', $data->照片位址);
+        if ($data->照片位址 ?? false) {
+            $data->照片位址 = str_replace('http://', 'https://', $data->照片位址);
+        }
         return $data;
     }
 }
