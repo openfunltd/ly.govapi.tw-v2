@@ -228,7 +228,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 $agenda->html_files = [];
                 $agenda->txt_files = [];
                 foreach ($agenda->agenda_lcidc_ids ?? [] as $id ){
-                    $agenda->html_files[] = sprintf("https://%s/gazette_agenda/%s/html", $_SERVER['HTTP_HOST'], urlencode($id));
+                    $agenda->html_files[] = sprintf("https://%s/gazette_agenda_doc/%s/html", $_SERVER['HTTP_HOST'], urlencode($id));
                     $agenda->txt_files[] = sprintf("https://lydata.ronny-s3.click/agenda-txt/LCIDC01_%s.doc", urlencode($id));
                 }
                 // https://ppg.ly.gov.tw/ppg/publications/official-gazettes/106/15/01/details
