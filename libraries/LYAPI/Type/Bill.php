@@ -85,6 +85,11 @@ class LYAPI_Type_Bill extends LYAPI_Type
                 'description' => '議案的提案日期 [例: 2021-10-06]',
                 'type' => 'date',
             ],
+            '提案單位/提案委員' => [
+                'es_field' => '提案單位/提案委員.keyword',
+                'description' => '提案單位或提案委員 [例: 民進黨團]',
+                'type' => 'string',
+            ],
         ];
     }
 
