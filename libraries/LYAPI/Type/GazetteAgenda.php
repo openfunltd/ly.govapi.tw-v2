@@ -25,6 +25,16 @@ class LYAPI_Type_GazetteAgenda extends LYAPI_Type
                 'description' => '卷 [例: 113]',
                 'type' => 'integer',
             ],
+            '期' => [
+                'es_field' => '',
+                'description' => '期 [例: 77]',
+                'type' => 'integer',
+            ],
+            '冊別' => [
+                'es_field' => '',
+                'description' => '冊別 [例: 1]',
+                'type' => 'integer',
+            ],
             '屆' => [
                 'es_field' => '',
                 'description' => '屆 [例: 11]',
