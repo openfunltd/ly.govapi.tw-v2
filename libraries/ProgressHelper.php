@@ -184,6 +184,14 @@ class ProgressHelper
             }
             return 0;
         });
+        if ($ret->id == '未分類') {
+            // 未分類就只包含議案
+            $bill_log = array_values(array_filter($bill_log, function ($log) {
+                if ($log['關係文書']['billNo'] ?? false) {
+                    return true;
+                }
+            }));
+        }
         $ret->bill_log = $bill_log;
         return $ret;
     }
