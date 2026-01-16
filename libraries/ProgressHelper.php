@@ -23,12 +23,15 @@ class ProgressHelper
                 }
             }
 
-            // check 是否有同一日委員會審查
-            /*
             foreach ($bill->議案流程 as $log) {
                 if (in_array($log->狀態, [
+                    '委員會發文',
+                ])) {
+                    // 如果委員會已經發文，就不用審查會議來連結了，以免造成誤判
+                    continue;
+                }
+                if (in_array($log->狀態, [
                     '委員會審查',
-                    '排入院會(討論事項)',
                 ])) {
                     $key = "{$log->狀態}-{$log->{'院會/委員會'}}-{$log->日期[0]}";
                     if (!array_key_exists($key, $match_keys)) {
@@ -38,7 +41,6 @@ class ProgressHelper
                     }
                 }
             }
-             */
         }
         return false;
     }
@@ -123,6 +125,7 @@ class ProgressHelper
                         '會議代碼' => $log->會議代碼 ?? '',
                     ];
                 } elseif ($log->狀態 == '委員會審查') {
+                    $ret->id = "審查-{$log->日期[0]}-{$bill->議案編號}";
                     $bill_log["審查-{$log->日期[0]}"] = [
                         '進度' => '委員會審查',
                         '會議日期' => $log->日期[0],

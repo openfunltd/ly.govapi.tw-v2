@@ -144,6 +144,7 @@ class LYAPI_Type_Law extends LYAPI_Type
             }
         }
 
+
         $query_terms = [];
         $query_terms[] = '屆=' . $data['屆'];
         $query_terms[] = '法律編號=' . $data['法律編號'];
@@ -162,6 +163,7 @@ class LYAPI_Type_Law extends LYAPI_Type
         $ret = LYAPI_SearchAction::getCollections('bill', implode('&', $query_terms));
         // 先找出所有三讀的關聯議案
 
+
         $bills = [];
         foreach ($ret->bills as $bill) {
             if (isset($skips[$bill->議案編號])) {
@@ -174,9 +176,61 @@ class LYAPI_Type_Law extends LYAPI_Type
 
                 $skips[$bill->提案編號] = true;
             }
-            $bills[] = $bill;
+            $bills[$bill->議案編號] = $bill;
         }
-        $groups = ProgressHelper::groupBills($bills);
+
+        // 找出有哪些審查會議，透過會議補上議案缺少的審查會議
+        $query_terms = [];
+        $query_terms[] = '屆=' . $data['屆'];
+        $query_terms[] = '議事網資料.關係文書.議案.法律編號=' . $data['法律編號'];
+        $query_terms[] = '會議種類=委員會';
+        $query_terms[] = '會議種類=聯席會議';
+
+        $ret = LYAPI_SearchAction::getCollections('meet', implode('&', $query_terms));
+
+        foreach ($ret->meets as $meet) {
+            $日期 = $meet->日期;
+            foreach ($meet->議事網資料 as $meet_record) {
+                foreach ($meet_record->關係文書->議案 ?? [] as $record) {
+                    $billNo = $record->議案編號 ?? null;
+                    if (!$billNo) {
+                        continue;
+                    }
+                    if (!isset($bills[$billNo])) {
+                        continue;
+                    }
+                    // 檢查是否有 審查會議紀錄
+                    foreach ($bills[$billNo]->議案流程 ?? [] as $log) {
+                        if ($log->狀態 != '委員會審查') {
+                            continue;
+                        }
+                        if ($log->會議代碼 != $meet->會議代碼) {
+                            continue;
+                        }
+                        continue 2;
+                    }
+                    // 補上審查會議
+                    $bill = $bills[$billNo];
+                    $log = new stdClass();
+                    $log->會期 = sprintf("%02d-%02d-%02d",
+                        $meet->屆,
+                        $meet->會期,
+                        end(explode('-', $meet->會議代碼))
+                    );
+                    $log->{'院會/委員會'} = '委員會';
+                    $log->狀態 = '委員會審查';
+                    if ($bill->議案狀態 == '交付審查') {
+                        $bill->議案狀態 = '委員會審查';
+                    }
+                    $log->日期 = $meet->日期;
+                    $log->會議代碼 = $meet->會議代碼;
+                    $bill->議案流程[] = $log;
+                    $bills[$billNo] = $bill;
+                }
+            }
+        }
+
+        $groups = ProgressHelper::groupBills(array_values($bills));
         $data['歷程'] = $groups;
         return $data;
     }
