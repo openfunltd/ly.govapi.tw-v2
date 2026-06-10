@@ -35,6 +35,21 @@ class LYAPI_Type_Vote extends LYAPI_Type
                 'description' => '表決時間 [例: 中華民國114年12月19日 上午10時42分02秒]',
                 'type' => 'string',
             ],
+            '贊成' => [
+                'es_field' => '贊成.keyword',
+                'description' => '贊成的委員姓名 [例: 黃國昌]',
+                'type' => 'string',
+            ],
+            '反對' => [
+                'es_field' => '反對.keyword',
+                'description' => '反對的委員姓名 [例: 黃國昌]',
+                'type' => 'string',
+            ],
+            '棄權' => [
+                'es_field' => '棄權.keyword',
+                'description' => '棄權的委員姓名 [例: 黃國昌]',
+                'type' => 'string',
+            ],
             '公報文件代碼' => [
                 'es_field' => 'lcidc_doc_id.keyword',
                 'description' => '公報文件代碼 [例: 1150101_00002]',
