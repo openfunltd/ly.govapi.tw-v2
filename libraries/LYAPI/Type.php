@@ -62,6 +62,14 @@ class LYAPI_Type
     }
 
     /**
+     * 回傳此 type 在 Elasticsearch 中的 index 名稱，預設與 type 相同，子類別可覆寫
+     */
+    public static function getIndexType()
+    {
+        return null;
+    }
+
+    /**
      * 回傳 ID 欄位的資訊，包含 type, example 等等
      */
     public static function getIdFieldsInfo()

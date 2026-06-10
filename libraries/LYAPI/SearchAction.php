@@ -222,7 +222,8 @@ class LYAPI_SearchAction
             }, $output_fields);
         }
 
-        $obj = Elastic::dbQuery("/{prefix}{$type}/_search", 'GET', json_encode($cmd));
+        $index_type = LYAPI_Type::run($type, 'getIndexType') ?? $type;
+        $obj = Elastic::dbQuery("/{prefix}{$index_type}/_search", 'GET', json_encode($cmd));
         $records->total = $obj->hits->total->value;
         if ($records->limit) {
             $records->total_page = ceil($records->total / $records->limit);
@@ -264,7 +265,8 @@ class LYAPI_SearchAction
     {
         $id = implode('-', $ids);
         $id = rawurlencode($id);
-        $obj = Elastic::dbQuery("/{prefix}{$type}/_doc/{$id}", 'GET');
+        $index_type = LYAPI_Type::run($type, 'getIndexType') ?? $type;
+        $obj = Elastic::dbQuery("/{prefix}{$index_type}/_doc/{$id}", 'GET');
         if ($obj->found === false) {
             $records = new StdClass;
             $records->error = true;
