@@ -15,6 +15,11 @@ class LYAPI_Type_Vote extends LYAPI_Type
     public static function getFilterFieldsInfo(): array
     {
         return [
+            '屆' => [
+                'es_field' => 'term',
+                'description' => '屆 [例: 11]',
+                'type' => 'integer',
+            ],
             '會議代碼' => [
                 'es_field' => 'meet_id.keyword',
                 'description' => '會議代碼 [例: 院會-11-4-14]',
@@ -41,6 +46,7 @@ class LYAPI_Type_Vote extends LYAPI_Type
     public static function getFieldMap()
     {
         return [
+            'term' => '屆',
             'meet_id' => '會議代碼',
             'lcidc_doc_id' => '公報文件代碼',
             'line_no' => '行號',
@@ -81,6 +87,7 @@ class LYAPI_Type_Vote extends LYAPI_Type
     public static function sortFields()
     {
         return [
+            '屆',
             '表決時間',
         ];
     }
