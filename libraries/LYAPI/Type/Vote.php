@@ -66,6 +66,7 @@ class LYAPI_Type_Vote extends LYAPI_Type
     public static function getFieldMap()
     {
         return [
+            '_id' => '表決代碼',
             'term' => '屆',
             'meet_id' => '會議代碼',
             'lcidc_doc_id' => '公報文件代碼',
