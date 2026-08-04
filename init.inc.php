@@ -13,3 +13,4 @@ set_include_path(
     . PATH_SEPARATOR . __DIR__ . '/models'
 );
 MiniEngine::initEnv();
+OpenFunAPIHelper::setUsageLogPath('/srv/data/v2.ly.govapi.tw/usage');

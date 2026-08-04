@@ -5,7 +5,7 @@ class ApiController extends MiniEngine_Controller
     public function collectionsAction($type)
     {
         OpenFunAPIHelper::checkUsage([
-            'project' => 'lyapi2',
+            'service' => 'lyapi2',
             'class' => "{$type}_collection",
         ]);
         try {
@@ -34,7 +34,7 @@ class ApiController extends MiniEngine_Controller
     public function itemAction($type, $id, $sub)
     {
         OpenFunAPIHelper::checkUsage([
-            'project' => 'lyapi2',
+            'service' => 'lyapi2',
             'class' => "{$type}_item",
         ]);
         $ret = LYAPI_SearchAction::getItem($type, $id, $sub, $_SERVER['QUERY_STRING']);

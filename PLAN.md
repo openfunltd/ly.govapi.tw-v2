@@ -17,7 +17,7 @@
 | 語言 | PHP 7.4+ |
 | 框架 | MiniEngine（自製輕量 MVC，v0.1.0，bundled 於 `mini-engine.php`） |
 | 主要資料庫 | Elasticsearch 7.x（儲存所有立法院資料） |
-| 次要資料庫 | PostgreSQL（API 使用量統計、token 管理） |
+| 用量統計/認證 | 檔案式 JSONL log（`OpenFunAPIHelper`），token 驗證交由前端 nginx gateway（`X-Token-Info` header）處理 |
 | 文件儲存 | S3-compatible（存放公報 PDF） |
 | 文件 | Swagger UI 5.17.14（動態產生 OpenAPI 3.0.3 spec） |
 | 前端 | Bootstrap 5.3.3（首頁），Noto Sans TC |
@@ -61,7 +61,7 @@ ly-api-v2/
 │   │   ├── SearchAction.php       # Elasticsearch 查詢建構
 │   │   └── StatAction.php         # 統計聚合
 │   ├── Elastic.php                # Elasticsearch 客戶端封裝
-│   ├── OpenFunAPIHelper.php       # API 使用量追蹤、token 驗證
+│   ├── OpenFunAPIHelper.php       # API 使用量統計（寫 JSONL log），讀取 nginx gateway 驗證過的 X-Token-Info header
 │   ├── ProgressHelper.php         # 議案關係追蹤
 │   ├── GazetteParser.php          # 公報文件解析
 │   └── GazetteTranscriptParser.php # 會議紀錄解析
@@ -181,11 +181,12 @@ cors_json()                         # 回傳 JSON + CORS headers
 | `ELASTIC_USER` | Elasticsearch 帳號 |
 | `ELASTIC_PASSWORD` | Elasticsearch 密碼 |
 | `ELASTIC_PREFIX` | Elasticsearch Index 前綴（用來區隔不同環境的 index） |
-| `API_COUNTER_DATABASE_URL` | PostgreSQL 連線字串（使用量統計） |
 | `SESSION_SECRET` | Session HMAC-SHA256 簽章金鑰 |
 | `SESSION_DOMAIN` | Cookie 網域（選填） |
 | `ENV` | `production` 或開發環境 |
 | `APP_NAME` | 應用程式顯示名稱 |
+
+`OpenFunAPIHelper` 的用量統計 log 路徑（`/srv/data/v2.ly.govapi.tw/usage`）在 `init.inc.php` 用 `setUsageLogPath()` 直接寫死，不透過環境變數設定。token 驗證不在此程式碼中進行，改由前端 nginx gateway（`verify_token.lua`）處理，驗證結果透過 `X-Token-Info` header（Base64URL 編碼 JSON）傳入。
 
 ---
 
