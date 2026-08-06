@@ -13,6 +13,14 @@ MiniEngine::dispatch(function($uri){
         return ['index', 'robots'];
     }
 
+    if ($uri == '/skill.md') {
+        return ['index', 'skill'];
+    }
+
+    if ($uri == '/knowledge.md') {
+        return ['index', 'knowledge'];
+    }
+
     if ($uri == '/swagger') {
         return ['swagger', 'ui'];
     }
