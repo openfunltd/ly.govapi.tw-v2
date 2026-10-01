@@ -99,7 +99,7 @@ class ProgressHelper
             } else {
                 $bill_log["提案-{$bill->議案編號}"] = [
                     '關係文書' => [
-                        '連結' => $bill->相關附件[0]->網址,
+                        '連結' => $bill->相關附件[0]->網址 ?? null,
                         'billNo' => $bill->議案編號,
                         '類型' => '提案',
                     ],
@@ -116,7 +116,7 @@ class ProgressHelper
                     $ret->id = "審查完成-{$log->日期[0]}-{$bill->議案編號}";
                     $bill_log["發文-{$bill->議案編號}"] = [
                         '關係文書' => [
-                            '連結' => $bill->相關附件[0]->網址,
+                            '連結' => $bill->相關附件[0]->網址 ?? null,
                             'billNo' => $bill->議案編號,
                             '類型' => '審查報告',
                         ],
@@ -140,7 +140,7 @@ class ProgressHelper
                 } elseif ($log->狀態 == '撤案') {
                     $bill_log["撤案-{$bill->議案編號}-{$log->日期[0]}"] = [
                         '關係文書' => [
-                            '連結' => $bill->相關附件[0]->網址,
+                            '連結' => $bill->相關附件[0]->網址 ?? null,
                             'billNo' => $bill->議案編號,
                             '類型' => '提案',
                         ],
@@ -169,7 +169,7 @@ class ProgressHelper
         usort($bill_log, function ($a, $b) {
             // 會議日期優先
             if ($a['會議日期'] != $b['會議日期']) {
-                return strtotime($a['會議日期']) - strtotime($b['會議日期']);
+                return strtotime($a['會議日期'] ?? '') - strtotime($b['會議日期'] ?? '');
             }
             // 一讀最不優先
             if ($a['進度'] == '一讀' and $b['進度'] != '一讀') {

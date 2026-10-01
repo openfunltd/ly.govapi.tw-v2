@@ -193,8 +193,15 @@ class LYAPI_Type_Bill extends LYAPI_Type
     {
         $billNo = $data->議案編號;
         header('Content-Type: text/html');
-        $content = file_get_contents(sprintf("https://lydata.ronny-s3.click/bill-doc-parsed/html/%s.doc.gz", $billNo));
+        $url = sprintf("https://lydata.ronny-s3.click/bill-doc-parsed/html/%s.doc.gz", $billNo);
+        $content = file_get_contents($url);
+        if ($content === false) {
+            throw new Exception('Failed to fetch content: ' . $url);
+        }
         $content = gzdecode($content);
+        if ($content === false) {
+            throw new Exception('Failed to decode content: ' . $url);
+        }
         if (strpos($content, '{') === 0) {
             $content = json_decode($content);
             $content = $content->content;
@@ -300,7 +307,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
             }
         } else {
             // 找同一條法律並且提案時間在兩個月內的
-            if (!count($source->laws)) {
+            if (!count($source->laws ?? [])) {
                 throw new Exception('找不到法律代碼，無法查詢');
             }
             $ret = Elastic::dbQuery("/{prefix}bill/_search", 'GET', json_encode([
@@ -426,7 +433,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
                 );
             }
         }
-        $data->url = sprintf("https://ppg.ly.gov.tw/ppg/bills/%s/details", urlencode($data->議案編號));
+        $data->url = sprintf("https://ppg.ly.gov.tw/ppg/bills/%s/details", urlencode($data->議案編號 ?? $id));
         return $data;
     }
 }

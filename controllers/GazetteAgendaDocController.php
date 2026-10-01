@@ -38,13 +38,14 @@ class GazetteAgendaDocController extends MiniEngine_Controller
         }
 
         if ($type == 'html') {
-            $content = preg_replace_callback('#<img ([^>]*)src="([^"]*)"#', function($matches) use ($agenda_id) {                $attr = $matches[1];
-            $src = $matches[2];
-            if (!preg_match('#pic://(.*)\.([^.]*)$#', $src, $matches)) {
-                return $matches[0];
-            }
-            $src = sprintf("https://lydata.ronny-s3.click/agenda-pic/%s.%s", $matches[1], $matches[2]);
-            return "<img $attr src=\"$src\"";
+            $content = preg_replace_callback('#<img ([^>]*)src="([^"]*)"#', function($matches) {
+                $attr = $matches[1];
+                $src = $matches[2];
+                if (!preg_match('#pic://(.*)\.([^.]*)$#', $src, $pic_matches)) {
+                    return $matches[0];
+                }
+                $src = sprintf("https://lydata.ronny-s3.click/agenda-pic/%s.%s", $pic_matches[1], $pic_matches[2]);
+                return "<img $attr src=\"$src\"";
             }, $content);
             header('Content-Type: text/html');
             echo $content;

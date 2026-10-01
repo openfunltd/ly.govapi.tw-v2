@@ -357,7 +357,7 @@ class LYAPI_Type
         $obj = Elastic::dbQuery("/{prefix}{$type}/_search", 'GET', json_encode($cmd));
         foreach ($obj->hits->hits as $hit) {
             $source = $hit->_source;
-            self::$_agg_values_result[$class][$field][$source->{$query_field}] = $source->{$output_field};
+            self::$_agg_values_result[$class][$field][$source->{$query_field}] = $source->{$output_field} ?? null;
             unset(self::$_agg_values[$class][$field][$source->{$query_field}]);
         }
         foreach (self::$_agg_values[$class][$field] as $v) {

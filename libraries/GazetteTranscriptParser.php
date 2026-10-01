@@ -459,7 +459,7 @@ class GazetteTranscriptParser
                 $first_line = $line;
                 $block_tmp = [];
                 $origin_block = json_decode(json_encode($blocks[0]));
-                while (trim($blocks[0][0]) != '') {
+                while (trim($blocks[0][0] ?? '') != '') {
                     $text = $blocks[0][0];
                     $text = str_replace(' ', '', $text);
                     $text = str_replace('　', '', $text);

@@ -187,11 +187,12 @@ class LYAPI_Type_Meet extends LYAPI_Type
         if (is_array($data->{'會議資料'} ?? false) and count($data->{'會議資料'})) {
             foreach ($data->{'會議資料'} as $idx => $meet_data) {
                 if (strlen($meet_data->{'會議編號'}) < 15) {
+                    $meet_date_timestamp = strtotime($meet_data->{'日期'} ?? '');
                     $meet_data->ppg_url = sprintf("https://ppg.ly.gov.tw/ppg/sittings/%s/details?meetingDate=%d/%02d/%02d",
                         $meet_data->{'會議編號'},
-                        date('Y', strtotime($meet_data->{'日期'})) - 1911,
-                        date('m', strtotime($meet_data->{'日期'})),
-                        date('d', strtotime($meet_data->{'日期'}))
+                        date('Y', $meet_date_timestamp) - 1911,
+                        date('m', $meet_date_timestamp),
+                        date('d', $meet_date_timestamp)
                     );
                     if ($data->{'議事錄'} ?? false) {
                         $data->{'議事錄'}->ppg_url = $meet_data->ppg_url;

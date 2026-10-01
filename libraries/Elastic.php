@@ -26,7 +26,7 @@ class Elastic
             throw new Exception("error: " . $content);
         }
         if (property_exists($obj, 'error') and $obj->error) {
-            file_put_contents('error.data', $data);
+            @file_put_contents('/tmp/ly-api-elastic-error.data', $data);
             throw new Exception("error: " . json_encode($obj, JSON_UNESCAPED_UNICODE));
         }
         curl_close($curl);
@@ -57,7 +57,7 @@ class Elastic
                         $ids[] = $result->_id;
                         continue;
                     }
-                    file_put_contents('error.data', self::$_db_bulk_pool[$mapping]);
+                    @file_put_contents('/tmp/ly-api-elastic-error.data', self::$_db_bulk_pool[$mapping]);
                     print_r($result);
                     continue;
                 }
