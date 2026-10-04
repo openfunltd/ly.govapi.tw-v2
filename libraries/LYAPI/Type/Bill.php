@@ -220,7 +220,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
         if ($source->{'議案狀態'} == '三讀') {
             // 如果是三讀的議案，查找相同法條並且同一天三讀通過的法條
             if (empty($source->laws ?? [])) {
-                throw new Exception('找不到法律代碼，無法查詢');
+                throw new MiniEngine_Controller_NotFound('找不到法律代碼，無法查詢');
             }
             $ret = Elastic::dbQuery("/{prefix}bill/_search", 'GET', json_encode([
                 'query' => [
@@ -314,7 +314,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
         } else {
             // 找同一條法律並且提案時間在兩個月內的
             if (!count($source->laws ?? [])) {
-                throw new Exception('找不到法律代碼，無法查詢');
+                throw new MiniEngine_Controller_NotFound('找不到法律代碼，無法查詢');
             }
             $ret = Elastic::dbQuery("/{prefix}bill/_search", 'GET', json_encode([
                 'query' => [
