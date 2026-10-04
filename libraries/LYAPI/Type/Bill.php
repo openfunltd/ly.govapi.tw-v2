@@ -328,7 +328,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
                             [
                                 'range' => [
                                     'first_time' => [
-                                        'gte' => date('Y-m-d', strtotime($source->first_time. ' -2 month')),
+                                        'gte' => date('Y-m-d', strtotime(($source->first_time ?? '') . ' -2 month')),
                                     ],
                                 ],
                             ],
