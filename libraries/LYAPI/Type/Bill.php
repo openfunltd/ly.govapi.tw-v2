@@ -219,6 +219,9 @@ class LYAPI_Type_Bill extends LYAPI_Type
         $source = $obj->_source;
         if ($source->{'議案狀態'} == '三讀') {
             // 如果是三讀的議案，查找相同法條並且同一天三讀通過的法條
+            if (empty($source->laws ?? [])) {
+                throw new Exception('找不到法律代碼，無法查詢');
+            }
             $ret = Elastic::dbQuery("/{prefix}bill/_search", 'GET', json_encode([
                 'query' => [
                     'bool' => [
@@ -230,7 +233,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
                             ],
                             [
                                 'term' => [
-                                    'last_time' => $source->last_time,
+                                    'last_time' => $source->last_time ?? '',
                                 ],
                             ],
                         ],
@@ -275,6 +278,9 @@ class LYAPI_Type_Bill extends LYAPI_Type
                 }
                 unset($pools[$hit->_id]->{'關連議案'});
                 if ($hit->_source->{'議案狀態'} == '三讀') {
+                    if (empty($source->laws ?? [])) {
+                        continue;
+                    }
                     $ret = Elastic::dbQuery("/{prefix}bill/_search", 'GET', json_encode([
                         'query' => [
                             'bool' => [
@@ -286,7 +292,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
                                     ],
                                     [
                                         'term' => [
-                                            'last_time' => $source->last_time,
+                                            'last_time' => $source->last_time ?? '',
                                         ],
                                     ],
                                 ],
@@ -344,6 +350,9 @@ class LYAPI_Type_Bill extends LYAPI_Type
                 }
                 unset($pools[$hit->_id]->{'關連議案'});
                 if ($hit->_source->{'議案狀態'} == '三讀') {
+                    if (empty($source->laws ?? [])) {
+                        continue;
+                    }
                     $ret = Elastic::dbQuery("/{prefix}bill/_search", 'GET', json_encode([
                         'query' => [
                             'bool' => [
@@ -355,7 +364,7 @@ class LYAPI_Type_Bill extends LYAPI_Type
                                     ],
                                     [
                                         'term' => [
-                                            'last_time' => $source->last_time,
+                                            'last_time' => $source->last_time ?? '',
                                         ],
                                     ],
                                 ],

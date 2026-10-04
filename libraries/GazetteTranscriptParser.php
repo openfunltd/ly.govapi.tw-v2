@@ -39,10 +39,7 @@ class GazetteTranscriptParser
                                 break;
                             }
                         } else {
-                            var_dump($vote);
-                            var_dump($line);
                             continue 2;
-                            exit;
                         }
                     }
                     $ret->votes[] = $vote;

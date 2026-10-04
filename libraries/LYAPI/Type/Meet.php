@@ -186,7 +186,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
     {
         if (is_array($data->{'會議資料'} ?? false) and count($data->{'會議資料'})) {
             foreach ($data->{'會議資料'} as $idx => $meet_data) {
-                if (strlen($meet_data->{'會議編號'}) < 15) {
+                if (strlen($meet_data->{'會議編號'} ?? '') < 15) {
                     $meet_date_timestamp = strtotime($meet_data->{'日期'} ?? '');
                     $meet_data->ppg_url = sprintf("https://ppg.ly.gov.tw/ppg/sittings/%s/details?meetingDate=%d/%02d/%02d",
                         $meet_data->{'會議編號'},
@@ -215,7 +215,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 $data->{'議事錄'}->doc_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-doc/%s.doc", urlencode($data->{'會議代碼'}));
                 $data->{'議事錄'}->txt_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-txt/%s.txt", urlencode($data->{'會議代碼'}));
                 $data->{'議事錄'}->html_file = sprintf("https://lydata.ronny-s3.click/meet-proceeding-html/%s.html", urlencode($data->{'會議代碼'}));
-                $data->{'議事錄'}->source_url = $data->{'會議資料'}[0]->ppg_url;
+                $data->{'議事錄'}->source_url = $data->{'會議資料'}[0]->ppg_url ?? null;
             }
         }
 
