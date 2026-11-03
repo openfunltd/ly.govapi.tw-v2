@@ -30,6 +30,11 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 'description' => '會議種類 [例: 院會] (TODO: enum)',
                 'type' => 'string',
             ],
+            '會議屬性' => [
+                'es_field' => 'categories.keyword',
+                'description' => '會議屬性，一場會議可有多個 [例: 預算審查]（院會、施政報告、總質詢、同意權行使、三讀、覆議案、不信任案、臨時會、人事審查、預算審查、法案審查、業務報告質詢、公聽會、黨團協商、考察、選舉召集委員、其他）',
+                'type' => 'string',
+            ],
             '會議資料.出席委員' => [
                 'es_field' => 'meet_data.attendLegislator.keyword',
                 'description' => '會議資料.出席委員 [例: 陳秀寳]',
@@ -74,6 +79,11 @@ class LYAPI_Type_Meet extends LYAPI_Type
             'sessionTimes' => '會次',
             'dates' => '日期',
             'title' => '會議標題',
+            'categories' => '會議屬性',
+            'third_reading_bills' => '三讀法案', // 院會才有，從 bill 議案流程的「三讀」日期反查；同一部法併案審查時會有多筆議案
+            'third_reading_bills.billNo' => '議案編號',
+            'third_reading_bills.title' => '議案名稱',
+            'third_reading_bills.laws' => '法律編號',
             'meet_data' => '會議資料', // from https://data.ly.gov.tw/getds.action?id=42
             "meet_data.term" => '屆',
             'meet_data.sessionPeriod' => '會期',
@@ -152,6 +162,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
         return [
             '委員會代號' => ['committee', ['委員會代號', '委員會名稱']],
             '議事網資料.關係文書.議案.法律編號' => ['law', ['法律編號', '名稱']],
+            '三讀法案.法律編號' => ['law', ['法律編號', '名稱']],
         ];
     }
 
