@@ -438,4 +438,17 @@ class LYAPI_Type_Ivod extends LYAPI_Type
             ],
         ];
     }
+
+    public static function getRelations()
+    {
+        return [
+            'speeches' => [
+                'type' => 'speech',
+                'map' => [
+                    'IVOD_ID' => 'IVOD_ID',
+                ],
+                'subject' => 'Full 影片對應到的公報發言（帶影片秒數）',
+            ],
+        ];
+    }
 }

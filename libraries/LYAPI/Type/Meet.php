@@ -190,6 +190,13 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 ],
                 'subject' => '會議內的質詢',
             ],
+            'speeches' => [
+                'type' => 'speech',
+                'map' => [
+                    '會議代碼' => '會議代碼',
+                ],
+                'subject' => '會議的公報發言（逐字稿以一次發言為單位）',
+            ],
         ];
     }
 
