@@ -38,6 +38,17 @@ class ApiController extends MiniEngine_Controller
 
     public function itemAction($type, $id, $sub)
     {
+        // 質詢編號 2026-11 從「屆-會期-會次-編號」改成「屆-會期-編號」（每會期連續編號，同一則在多次院會刊登只算一筆）；
+        // 舊四段式網址 301 到新編號。編號相同內容不同的少數例外有「-會次」後綴，所以兩種都試
+        if ($type === 'interpellation' and preg_match('#^(\d+)-(\d+)-(\d+)-(\d+)$#', $id[0] ?? '', $m)) {
+            foreach (["{$m[1]}-{$m[2]}-{$m[4]}", "{$m[1]}-{$m[2]}-{$m[4]}-{$m[3]}"] as $new_id) {
+                $obj = Elastic::dbQuery("/{prefix}interpellation/_doc/{$new_id}", 'GET');
+                if ($obj->found ?? false) {
+                    $url = "/interpellation/{$new_id}" . ($sub ? '/' . implode('/', $sub) : '') . ($_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '');
+                    return $this->redirect($url, 301);
+                }
+            }
+        }
         OpenFunAPIHelper::checkUsage([
             'service' => 'lyapi2',
             'class' => "{$type}_item",
