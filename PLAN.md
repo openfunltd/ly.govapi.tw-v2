@@ -46,7 +46,7 @@ ly-api-v2/
 │   ├── LYAPI/
 │   │   ├── Helper.php             # URL 解析、type 識別
 │   │   ├── Type.php               # 所有資料型別的基底類別
-│   │   └── Type/                  # 11 種具體型別實作
+│   │   └── Type/                  # 13 種具體型別實作
 │   │       ├── Bill.php           # 議案
 │   │       ├── Legislator.php     # 立法委員
 │   │       ├── Law.php            # 法律
@@ -57,7 +57,9 @@ ly-api-v2/
 │   │       ├── Gazette.php        # 公報
 │   │       ├── GazetteAgenda.php  # 公報目錄
 │   │       ├── Interpellation.php # 質詢
-│   │       └── Ivod.php           # 影片錄影（IVOD）
+│   │       ├── Ivod.php           # 影片錄影（IVOD）
+│   │       ├── Vote.php           # 表決
+│   │       └── Speech.php         # 公報發言（公報逐字稿切成一次發言一筆）
 │   │   ├── SearchAction.php       # Elasticsearch 查詢建構
 │   │   └── StatAction.php         # 統計聚合
 │   ├── Elastic.php                # Elasticsearch 客戶端封裝
@@ -71,7 +73,7 @@ ly-api-v2/
 
 ---
 
-## 資料型別（11 種）
+## 資料型別（13 種）
 
 | 型別 | 路徑 | 說明 |
 |------|------|------|
@@ -86,6 +88,10 @@ ly-api-v2/
 | 公報目錄 | `/gazetteagendas` | 公報目錄條目 |
 | 質詢 | `/interpellations` | 質詢紀錄 |
 | 影片 | `/ivods` | IVOD 影片錄影 |
+| 表決 | `/votes` | 記名表決（來自公報） |
+| 公報發言 | `/speeches` | 公報逐字稿，一次發言一筆；`q=` 為公報內文全文搜尋 |
+
+列表路徑是型別單數加 s；不規則複數列在 `LYAPI_Helper::$irregular_plurals`（目前只有 `speech → speeches`），路由、Swagger、回傳 key 都從那裡取。
 
 ---
 
@@ -122,6 +128,8 @@ cors_json()                         # 回傳 JSON + CORS headers
 | `/bills?屆=11&會期=2` | 帶篩選條件的列表 |
 | `/legislator/11/韓國瑜` | 以屆+姓名查詢委員 |
 | `/bill/202110068550000/interpellations` | 議案關聯的質詢 |
+| `/meet/委員會-11-5-20-18/speeches`、`/ivod/17717/speeches` | 會議／影片的公報發言 |
+| `/interpellation/11-3-8-22` | 舊四段式質詢編號，301 到 `/interpellation/11-3-22`（`ApiController::itemAction`） |
 | `/v2/...` | `/v2` 前綴會自動正規化為 `/` |
 
 ---
