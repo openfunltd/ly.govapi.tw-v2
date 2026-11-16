@@ -58,7 +58,7 @@ class LYAPI_Type
      */
     public static function getReturnKey()
     {
-        return strtolower(str_replace('LYAPI_Type_', '', get_called_class())) . 's';
+        return LYAPI_Helper::plural(strtolower(str_replace('LYAPI_Type_', '', get_called_class())));
     }
 
     /**

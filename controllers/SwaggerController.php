@@ -26,7 +26,7 @@ class SwaggerController extends MiniEngine_Controller
 
     protected function getEndPointPath(string $entity, string $class_name, string $endpoint_type, ?string $relation_name = null): string
     {
-        $resource = $this->pascal2Underscore($entity) . 's';
+        $resource = LYAPI_Helper::plural($this->pascal2Underscore($entity));
         $id_fields = array_column($class_name::getIdFieldsInfo(), 'path_name');
         $id_fields_string = implode('/', array_map(fn($field) => '{' . $field . '}', $id_fields));
         switch ($endpoint_type) {

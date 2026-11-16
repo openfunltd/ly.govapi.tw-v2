@@ -9,6 +9,25 @@ class LYAPI_Helper
         return str_replace(' ', '', ucwords(str_replace('_', ' ', $str)));
     }
 
+    // 網址用的複數型：不規則的列在這裡，其他直接加 s（type 單數名 => 網址複數名）
+    protected static $irregular_plurals = [
+        'speech' => 'speeches',
+    ];
+
+    public static function plural($singular)
+    {
+        return self::$irregular_plurals[$singular] ?? ($singular . 's');
+    }
+
+    public static function singular($plural)
+    {
+        $singular = array_search($plural, self::$irregular_plurals);
+        if ($singular !== false) {
+            return $singular;
+        }
+        return substr($plural, -1) == 's' ? substr($plural, 0, -1) : $plural;
+    }
+
     public static function getApiType($uri)
     {
         $url_terms = explode('/', trim($uri, '/'));
@@ -17,8 +36,8 @@ class LYAPI_Helper
         }
         $type_underscore = array_shift($url_terms);
 
-        // 去掉結尾 s 的型式（TODO: 之後需要處理不規則複數）
-        $type_underscore_singular = substr($type_underscore, -1) == 's' ? substr($type_underscore, 0, -1) : $type_underscore;
+        // 去掉結尾 s 的型式，不規則複數（speeches）查表
+        $type_underscore_singular = self::singular($type_underscore);
 
         // 檔名是大駝峰
         $type_pascal = self::ucfirst($type_underscore_singular);
