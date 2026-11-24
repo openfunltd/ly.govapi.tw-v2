@@ -76,12 +76,21 @@ class LYAPI_SearchAction
         $filter_fields = LYAPI_Type::run($type, 'filterFields');
         $default_sort_fields = LYAPI_Type::run($type, 'sortFields');
         if (self::getParams('sort')) {
-            $sort_fields = self::getParams('sort');
+            // 正規寫法是 sort 重複給（sort=卷<&sort=期<），但 sort=卷<,期 這種寫法常有人試，一併接受
+            $sort_fields = [];
+            foreach (self::getParams('sort') as $v) {
+                foreach (explode(',', $v) as $f) {
+                    if (trim($f) !== '') {
+                        $sort_fields[] = trim($f);
+                    }
+                }
+            }
         } else {
             $sort_fields = $default_sort_fields;
         }
         if ($sort_fields) {
             $cmd->sort = new StdClass;
+            $reverse_map = LYAPI_Type::run($type, 'getReverseFieldMap');
             foreach ($sort_fields as $field_name) {
                 $way = 'desc';
                 if (preg_match('#>$#', $field_name)) {
@@ -94,9 +103,13 @@ class LYAPI_SearchAction
                 if (array_key_exists($field_name, $filter_fields) and $filter_fields[$field_name] !== '') {
                     // 如果有對應的 filterFields，就用 filterFields
                     $es_field_name = $filter_fields[$field_name];
-                } else {
+                } elseif (array_key_exists($field_name, $reverse_map)) {
                     // 沒有對應的就用 getFieldMap
-                    $es_field_name = LYAPI_Type::run($type, 'reverseField', [$field_name]);
+                    $es_field_name = $reverse_map[$field_name];
+                } else {
+                    // 不認得的欄位直接丟給 ES 會變 500（No mapping found ... in order to sort on），改回 400 告訴呼叫端
+                    throw new LYAPI_BadRequest(sprintf('不支援的排序欄位「%s」。sort 的寫法是欄位名後接 < 升冪或 > 降冪，多個欄位重複給 sort；這個資料的預設排序是 %s',
+                        $field_name, implode('、', $default_sort_fields ?: ['（無）'])));
                 }
                 $cmd->sort->{$es_field_name} = $way;
             }
@@ -351,4 +364,9 @@ class LYAPI_SearchAction
         $buckets = LYAPI_Type::run($type, 'handleAggValue', [$buckets, $agg_fields, $level]);
         return $buckets;
     }
+}
+
+/** 呼叫端的參數錯誤（回 400，不寫 error_log） */
+class LYAPI_BadRequest extends Exception
+{
 }

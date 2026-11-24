@@ -11,6 +11,13 @@ class ApiController extends MiniEngine_Controller
         $http_status = 200;
         try {
             $ret = LYAPI_SearchAction::getCollections($type, $_SERVER['QUERY_STRING']);
+        } catch (LYAPI_BadRequest $e) {
+            $http_status = 400;
+            header('HTTP/1.1 400 Bad Request', true, 400);
+            $ret = [
+                'error' => true,
+                'message' => $e->getMessage(),
+            ];
         } catch (Exception $e) {
             $uniqid = MiniEngineHelper::uniqid(8);
             if (strpos($e->getMessage(), 'Result window is too large')) {
@@ -53,10 +60,22 @@ class ApiController extends MiniEngine_Controller
             'service' => 'lyapi2',
             'class' => "{$type}_item",
         ]);
-        $ret = LYAPI_SearchAction::getItem($type, $id, $sub, $_SERVER['QUERY_STRING']);
+        $http_status = 200;
+        try {
+            $ret = LYAPI_SearchAction::getItem($type, $id, $sub, $_SERVER['QUERY_STRING']);
+        } catch (LYAPI_BadRequest $e) {
+            // 子資料（/meet/{id}/speeches?sort=…）的參數錯誤也回 400
+            $http_status = 400;
+            header('HTTP/1.1 400 Bad Request', true, 400);
+            $ret = [
+                'error' => true,
+                'message' => $e->getMessage(),
+            ];
+        }
         OpenFunAPIHelper::apiDone([
             'size' => strlen(json_encode($ret, JSON_UNESCAPED_UNICODE)),
             'count' => $this->countRecords($ret),
+            'http_status' => $http_status,
         ]);
         return $this->cors_json($ret);
     }
