@@ -266,6 +266,9 @@ class GazetteTranscriptParser
             // 如果是「第x案：」開頭，並且接下來五行內有「案由：xxx」，用案由去檢查
             if (preg_match('#^第.*案：#u', $line)) {
                 for ($i = 0; $i < 5; $i ++) {
+                    if (!isset($p_doms[$i])) {
+                        break;      // 文件尾端不到五行
+                    }
                     if (!preg_match('#^案由：#u', trim($p_doms[$i]->textContent))) {
                         continue;
                     }
