@@ -192,16 +192,25 @@ class LYAPI_Type_Bill extends LYAPI_Type
     public static function getDocHTML($data)
     {
         $billNo = $data->議案編號;
-        header('Content-Type: text/html');
         $url = sprintf("https://lydata.ronny-s3.click/bill-doc-parsed/html/%s.doc.gz", $billNo);
-        $content = file_get_contents($url);
-        if ($content === false) {
-            throw new Exception('Failed to fetch content: ' . $url);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $content = curl_exec($curl);
+        $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        // 沒有這份文件是正常情況（不是每個議案都有關係文書），回 404 就好；S3 出錯才算 error
+        if ($http_code == 404) {
+            throw new MiniEngine_Controller_NotFound('找不到議案文件: ' . $billNo);
+        }
+        if ($http_code != 200 or $content === false) {
+            throw new Exception("Failed to fetch content ({$http_code}): " . $url);
         }
         $content = gzdecode($content);
         if ($content === false) {
             throw new Exception('Failed to decode content: ' . $url);
         }
+        header('Content-Type: text/html');
         if (strpos($content, '{') === 0) {
             $content = json_decode($content);
             $content = $content->content;

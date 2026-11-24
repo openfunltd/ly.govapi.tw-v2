@@ -22,8 +22,12 @@ class GazetteAgendaDocController extends MiniEngine_Controller
         $content = curl_exec($curl);
         $info = curl_getinfo($curl);
         curl_close($curl);
+        // 沒有這份文件回 404 就好（公報文件不一定每份都轉出來）；S3 出錯才算 error
+        if ($info['http_code'] == 404) {
+            throw new MiniEngine_Controller_NotFound('找不到公報文件: ' . $lcidc_id);
+        }
         if ($info['http_code'] != 200) {
-            throw new Exception('Failed to fetch content: ' . $url);
+            throw new Exception("Failed to fetch content ({$info['http_code']}): " . $url);
         }
 
         if ($type == 'parsed') {
