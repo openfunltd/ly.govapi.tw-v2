@@ -66,6 +66,7 @@ curl -X POST https://data.openfun.tw/api/v1/auth/token \
 | 影片（IVOD） | `GET /ivods` | `GET /ivod/{IVOD_ID}` | `IVOD_ID` |
 | 表決 | `GET /votes` | `GET /vote/{表決代碼}` | `表決代碼` |
 | 公報發言 | `GET /speeches` | `GET /speech/{發言編號}` | `發言編號` |
+| 會議段落 | `GET /meet_sections` | `GET /meet_section/{段落編號}` | `段落編號` |
 
 > 注意：URL 路徑一律用底線（`law_versions`、`gazette_agendas`），**不是**駝峰或無底線；例如 `/lawversions` 會 404，必須用 `/law_versions`。
 > 列表端點是單數加 s，只有公報發言是不規則複數 `/speeches`（`/speechs` 也接受）。
@@ -178,6 +179,18 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 
 ---
 
+## 會議段落（`/meet_sections`）使用要點
+
+公報發言之上的「單元 → 段」標註（段落目錄），一段一筆：`單元序`／`單元名稱`、`段序`／`段名`、`段種類`（person 人段／case 案段／stage 階段段／group 分組標題／procedure 過場／attachment 書面資料）、`標籤`（表決、三讀、逐條討論、協商結論…）、`表決`，以及這段涵蓋的公報發言 `文件編號`＋`發言起`～`發言迄`（/speeches 的 `順序`）。
+切分規則依會議種類不同（`切分器`：院會／委員會預算審查／公聽會／黨團協商）；委員會非預算審查日、考察等沒有段落。
+
+```bash
+# 一場會議的段落目錄（依單元、段的順序）
+curl "https://ly.govapi.tw/v2/meet/委員會-11-5-20-18/meet_sections?sort=單元序<&limit=200"
+# 這一段的發言內文：用 文件編號 加 順序 區間
+curl "https://ly.govapi.tw/v2/speeches?文件編號=1154904_00004&順序:141,213&sort=順序<"
+```
+
 ## 公報發言（`/speeches`）使用要點
 
 公報逐字稿以「一次發言」為一筆（公報本來就是「發言者：內容」一段一段），不是逐句。公報的每個字都落在某個 block（附件、議事錄也是），所以 `q=` 等於公報內文全文搜尋；要只看口頭發言請加 `區塊種類=發言`。
@@ -220,4 +233,4 @@ GET https://ly.govapi.tw/v2/swagger.yaml
 | 聚合統計參數 | `agg` |
 | 排序參數 | `sort`（欄位名後接 `<` 升冪、`>` 降冪，預設降冪） |
 | OpenAPI spec | `https://ly.govapi.tw/v2/swagger.yaml` |
-| 資料型別數 | 13（議案／立委／法律／法律版本／法條／委員會／會議／公報／公報目錄／質詢／影片／表決／公報發言） |
+| 資料型別數 | 14（議案／立委／法律／法律版本／法條／委員會／會議／公報／公報目錄／質詢／影片／表決／公報發言／會議段落） |

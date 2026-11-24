@@ -197,6 +197,13 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 ],
                 'subject' => '會議的公報發言（逐字稿以一次發言為單位）',
             ],
+            'meet_sections' => [
+                'type' => 'meet_section',
+                'map' => [
+                    '會議代碼' => '會議代碼',
+                ],
+                'subject' => '會議的段落目錄（單元 → 段，每段對到一段公報發言的順序區間）',
+            ],
         ];
     }
 

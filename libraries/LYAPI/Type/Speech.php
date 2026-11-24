@@ -65,6 +65,11 @@ class LYAPI_Type_Speech extends LYAPI_Type
                 'description' => '會議日期 [例: 2026-06-10]',
                 'type' => 'string',
             ],
+            '順序' => [
+                'es_field' => 'seq',
+                'description' => '在公報文件內的順序（從 0 起）；配合 /meet_sections 的 發言起～發言迄 用區間篩：順序:12,30',
+                'type' => 'integer',
+            ],
             '區塊種類' => [
                 'es_field' => 'kind',
                 'description' => '區塊種類：發言／主席程序（主席宣布開會、請某人發言等 60 字以內的程序話）／附件（書面質詢、對照表等）／議事錄（上次會議議事錄全文）／宣讀表決／標題（文件開頭的時間地點主席）',

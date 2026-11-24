@@ -59,7 +59,8 @@ ly-api-v2/
 │   │       ├── Interpellation.php # 質詢
 │   │       ├── Ivod.php           # 影片錄影（IVOD）
 │   │       ├── Vote.php           # 表決
-│   │       └── Speech.php         # 公報發言（公報逐字稿切成一次發言一筆）
+│   │       ├── Speech.php         # 公報發言（公報逐字稿切成一次發言一筆）
+│   │       └── MeetSection.php    # 會議段落（單元 → 段，對到公報發言的順序區間）
 │   │   ├── SearchAction.php       # Elasticsearch 查詢建構
 │   │   └── StatAction.php         # 統計聚合
 │   ├── Elastic.php                # Elasticsearch 客戶端封裝
@@ -90,6 +91,7 @@ ly-api-v2/
 | 影片 | `/ivods` | IVOD 影片錄影 |
 | 表決 | `/votes` | 記名表決（來自公報） |
 | 公報發言 | `/speeches` | 公報逐字稿，一次發言一筆；`q=` 為公報內文全文搜尋 |
+| 會議段落 | `/meet_sections` | 單元 → 段的段落目錄，一段一筆，`發言起`～`發言迄` 對 `/speeches` 的 `順序`；匯入端 ly.govapi.tw `imports/segment/` |
 
 列表路徑是型別單數加 s；不規則複數列在 `LYAPI_Helper::$irregular_plurals`（目前只有 `speech → speeches`），路由、Swagger、回傳 key 都從那裡取。
 
@@ -129,6 +131,7 @@ cors_json()                         # 回傳 JSON + CORS headers
 | `/legislator/11/韓國瑜` | 以屆+姓名查詢委員 |
 | `/bill/202110068550000/interpellations` | 議案關聯的質詢 |
 | `/meet/委員會-11-5-20-18/speeches`、`/ivod/17717/speeches` | 會議／影片的公報發言 |
+| `/meet/委員會-11-5-20-18/meet_sections` | 會議的段落目錄 |
 | `/interpellation/11-3-8-22` | 舊四段式質詢編號，301 到 `/interpellation/11-3-22`（`ApiController::itemAction`） |
 | `/v2/...` | `/v2` 前綴會自動正規化為 `/` |
 
