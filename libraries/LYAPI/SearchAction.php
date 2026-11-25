@@ -91,6 +91,8 @@ class LYAPI_SearchAction
         if ($sort_fields) {
             $cmd->sort = new StdClass;
             $reverse_map = LYAPI_Type::run($type, 'getReverseFieldMap');
+            // type 自己宣告的預設排序欄位一律放行（例：ivod 的「會議時間」是 ES 文件裡另外存的欄位，不在 getFieldMap）
+            $type_sort_fields = array_map(function($f) { return rtrim($f, '<>'); }, $default_sort_fields);
             foreach ($sort_fields as $field_name) {
                 $way = 'desc';
                 if (preg_match('#>$#', $field_name)) {
@@ -106,6 +108,8 @@ class LYAPI_SearchAction
                 } elseif (array_key_exists($field_name, $reverse_map)) {
                     // 沒有對應的就用 getFieldMap
                     $es_field_name = $reverse_map[$field_name];
+                } elseif (in_array($field_name, $type_sort_fields)) {
+                    $es_field_name = $field_name;
                 } else {
                     // 不認得的欄位直接丟給 ES 會變 500（No mapping found ... in order to sort on），改回 400 告訴呼叫端
                     throw new LYAPI_BadRequest(sprintf('不支援的排序欄位「%s」。sort 的寫法是欄位名後接 < 升冪或 > 降冪，多個欄位重複給 sort；這個資料的預設排序是 %s',
