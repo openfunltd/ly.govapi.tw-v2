@@ -270,7 +270,7 @@ class LYAPI_SearchAction
                     usort($records->aggs[$sub_agg_name]->buckets, function($a, $b) {
                         return $b->count - $a->count;
                     });
-                    $records->aggs[$sub_agg_name]->buckets = array_slice($records->aggs[$sub_agg_name]->buckets, 0, 100);
+                    $records->aggs[$sub_agg_name]->buckets = array_slice($records->aggs[$sub_agg_name]->buckets, 0, $agg_size);
                 }
             }
             $records->aggs = array_values($records->aggs);

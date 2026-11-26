@@ -279,7 +279,6 @@ class LYAPI_Type
 
             $field_map = static::getFieldMap();
             foreach ($field_map as $k => $v) {
-                $prefix[$k] = $v;
                 if (strpos($k, '.') !== false) {
                     $terms = explode('.', $k);
                     $p = implode('.', array_slice($terms, 0, -1));
@@ -289,6 +288,8 @@ class LYAPI_Type
                     }
                     $v = $prefix[$p] . '.' . $v;
                 }
+                // 記完整的 API 路徑，三層以上的欄位（議事網資料.附件.標題）才對得到
+                $prefix[$k] = $v;
                 self::$_reverse_field_map[$class][$v] = $k;
             }
         }
