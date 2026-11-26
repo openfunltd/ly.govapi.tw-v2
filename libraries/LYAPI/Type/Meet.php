@@ -60,6 +60,22 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 'description' => '議事網資料.關係文書.議案.議案編號 [例: 202110071090000]',
                 'type' => 'string',
             ],
+            '資料狀態.切分器' => [
+                'es_field' => 'signals.segmenters.keyword',
+                'description' => '會議紀錄切分器（有段落目錄的會議才有）[例: 委員會預算審查]',
+                'type' => 'string',
+                'enum' => ['院會', '委員會預算審查', '公聽會', '黨團協商'],
+            ],
+            '資料狀態.有AI逐字稿' => [
+                'es_field' => 'signals.ai_transcript',
+                'description' => '有沒有 Full 影片的 AI 逐字稿 [例: true]',
+                'type' => 'boolean',
+            ],
+            '資料狀態.有公報發言' => [
+                'es_field' => 'signals.has_speech',
+                'description' => '公報發言索引（/speeches）有沒有這場 [例: true]',
+                'type' => 'boolean',
+            ],
             '議事網資料.關係文書.議案.法律編號' => [
                 'es_field' => 'ppg_data.關係文書.bills.laws.keyword',
                 'description' => '議事網資料.laws [例: 01177]',
@@ -81,6 +97,16 @@ class LYAPI_Type_Meet extends LYAPI_Type
             'title' => '會議標題',
             'categories' => '會議屬性',
             'third_reading_bills' => '三讀法案', // 院會才有，從 bill 議案流程的「三讀」日期反查；同一部法併案審查時會有多筆議案
+            // 匯入端 imports/meet/enrich-signals.php 算好的狀態訊號：列會議時不必再查 ivod、speech、meet_section
+            'signals' => '資料狀態',
+            'signals.full_ivods' => '完整影片',
+            'signals.ai_transcript' => '有AI逐字稿',
+            'signals.speech_count' => '公報發言數',
+            'signals.has_speech' => '有公報發言',
+            'signals.segmenters' => '切分器',
+            'signals.vote_sections' => '表決段數',
+            'signals.third_reading_sections' => '三讀段數',
+            'signals.updated_at' => '更新時間',
             'third_reading_bills.billNo' => '議案編號',
             'third_reading_bills.title' => '議案名稱',
             'third_reading_bills.laws' => '法律編號',
