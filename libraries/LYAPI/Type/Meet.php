@@ -60,6 +60,11 @@ class LYAPI_Type_Meet extends LYAPI_Type
                 'description' => '議事網資料.關係文書.議案.議案編號 [例: 202110071090000]',
                 'type' => 'string',
             ],
+            '機關' => [
+                'es_field' => 'agencies.keyword',
+                'description' => '會議事由提到的中央機關（依機關名稱清單比對，不分邀請列席或預算審查）[例: 內政部]',
+                'type' => 'string',
+            ],
             '資料狀態.切分器' => [
                 'es_field' => 'signals.segmenters.keyword',
                 'description' => '會議紀錄切分器（有段落目錄的會議才有）[例: 委員會預算審查]',
@@ -98,6 +103,7 @@ class LYAPI_Type_Meet extends LYAPI_Type
             'categories' => '會議屬性',
             'third_reading_bills' => '三讀法案', // 院會才有，從 bill 議案流程的「三讀」日期反查；同一部法併案審查時會有多筆議案
             // 匯入端 imports/meet/enrich-signals.php 算好的狀態訊號：列會議時不必再查 ivod、speech、meet_section
+            'agencies' => '機關', // 會議事由提到的中央機關，LYLib::findAgencies
             'signals' => '資料狀態',
             'signals.full_ivods' => '完整影片',
             'signals.ai_transcript' => '有AI逐字稿',
