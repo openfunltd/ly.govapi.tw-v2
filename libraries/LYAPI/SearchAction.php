@@ -193,6 +193,8 @@ class LYAPI_SearchAction
 
         if (self::getParams('agg')) {
             $cmd->aggs = new StdClass;
+            // agg 預設最多回 100 個 bucket，agg_size 可以放大到 500（例：一屆 123 位立委的發言數）
+            $agg_size = min(500, max(1, intval(self::getParams('agg_size')[0] ?? 100)));
             foreach (self::getParams('agg') as $agg) {
                 $agg_name = strval($agg);
                 $agg_fields = explode(',', $agg);
@@ -211,14 +213,14 @@ class LYAPI_SearchAction
                         $agg_term = (object)[
                             'terms' => (object)[
                                 'field' => $es_field,
-                                'size' => 100,
+                                'size' => $agg_size,
                             ],
                         ];
                     } else {
                         $agg_term = (object)[
                             'terms' => (object)[
                                 'field' => $es_field,
-                                'size' => 100,
+                                'size' => $agg_size,
                             ],
                             'aggs' => (object)[
                                 $agg_field => $agg_term,
